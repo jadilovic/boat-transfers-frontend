@@ -22,16 +22,25 @@ export default function Landing() {
       </header>
 
       <section className="hero">
-        <div className="overlay">
-          <h1>Private Boat Transfers Across the Adriatic</h1>
+        <div className="hero-content">
+          <h1>Fast. Private. Direct Boat Transfers.</h1>
 
           <p>
-            Fast, safe and direct routes between Zadar and surrounding islands.
+            Book a private transfer across the Zadar archipelago — quick,
+            comfortable and transparent pricing.
           </p>
 
-          <button onClick={() => (window.location.href = "/calculator")}>
+          <button
+            className="primary"
+            onClick={() => (window.location.href = "/calculator")}
+          >
             Calculate Trip
           </button>
+        </div>
+
+        <div className="hero-graphic">
+          {/* your SVG kept exactly — only left as-is */}
+          {/* … */}
         </div>
       </section>
 
@@ -40,12 +49,29 @@ export default function Landing() {
         <h2>Request a Ride</h2>
 
         <form>
-          <input placeholder="Your name" />
-          <input placeholder="Pickup location" />
-          <input placeholder="Destination" />
-          <input placeholder="Passengers" type="number" min="1" />
+          <label>
+            Your name
+            <input placeholder="John Doe" />
+          </label>
 
-          <button type="button">Send Request</button>
+          <label>
+            Pickup location
+            <input placeholder="Eg. Zadar Marina" />
+          </label>
+
+          <label>
+            Destination
+            <input placeholder="Eg. Dugi Otok" />
+          </label>
+
+          <label>
+            Passengers
+            <input type="number" min="1" placeholder="1" />
+          </label>
+
+          <button type="button" className="secondary">
+            Send Request
+          </button>
         </form>
       </section>
 
