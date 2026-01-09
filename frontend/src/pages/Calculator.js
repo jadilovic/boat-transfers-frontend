@@ -17,7 +17,7 @@ export default function Calculator() {
 
   const [fromDock, setFromDock] = useState("");
   const [toDock, setToDock] = useState("");
-  const [passengers, setPassengers] = useState(1);
+  const [passengers, setPassengers] = useState("");
   const [distance, setDistance] = useState(null);
   const [price, setPrice] = useState(null);
   const [error, setError] = useState("");
@@ -61,7 +61,7 @@ export default function Calculator() {
       return;
     }
 
-    if (passengers < 1) {
+    if (!passengers || passengers < 1) {
       setError("At least one passenger is required.");
       return;
     }
@@ -91,7 +91,7 @@ export default function Calculator() {
 
         <div className="calc-box">
           <div className="input-row">
-            <div>
+            <div className="field">
               <label>From</label>
               <select
                 value={fromDock}
@@ -99,18 +99,14 @@ export default function Calculator() {
               >
                 <option value="">Select dock</option>
                 {docks.map((d) => (
-                  <option
-                    key={d.name}
-                    value={d.name}
-                    disabled={d.name === toDock}
-                  >
+                  <option key={d.name} value={d.name} disabled={d.name === toDock}>
                     {d.name}
                   </option>
                 ))}
               </select>
             </div>
 
-            <div>
+            <div className="field">
               <label>To</label>
               <select
                 value={toDock}
@@ -118,27 +114,26 @@ export default function Calculator() {
               >
                 <option value="">Select dock</option>
                 {docks.map((d) => (
-                  <option
-                    key={d.name}
-                    value={d.name}
-                    disabled={d.name === fromDock}
-                  >
+                  <option key={d.name} value={d.name} disabled={d.name === fromDock}>
                     {d.name}
                   </option>
                 ))}
               </select>
             </div>
-          </div>
 
-          <div style={{ marginTop: 16 }}>
-            <label>Passengers</label>
-            <input
-              type="number"
-              min="1"
-              value={passengers}
-              onChange={(e) => setPassengers(Number(e.target.value))}
-              style={{ width: "100%", padding: 8 }}
-            />
+            <div className="field">
+              <label>Passengers</label>
+              <input
+                type="number"
+                min="1"
+                placeholder="1"
+                value={passengers}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setPassengers(value === "" ? "" : Number(value));
+                }}
+              />
+            </div>
           </div>
 
           <button className="calc-btn" onClick={handleCalculate}>
@@ -149,13 +144,28 @@ export default function Calculator() {
 
           {distance && price && (
             <div className="result">
-              <p><strong>Distance:</strong> {distance} km</p>
-              <p><strong>Base price:</strong> €{price.base}</p>
-              <p><strong>Passengers:</strong> €{price.passengers}</p>
-              <hr />
-              <p><strong>Total price:</strong> €{price.total}</p>
+              <div className="result-row">
+                <span>Distance</span>
+                <strong>{distance} km</strong>
+              </div>
+
+              <div className="result-row">
+                <span>Base fare</span>
+                <strong>€{price.base}</strong>
+              </div>
+
+              <div className="result-row">
+                <span>Passengers ({passengers})</span>
+                <strong>€{price.passengers}</strong>
+              </div>
+
+              <div className="result-total">
+                <span>Total</span>
+                <strong>€{price.total}</strong>
+              </div>
             </div>
           )}
+
         </div>
       </div>
     </Layout>
