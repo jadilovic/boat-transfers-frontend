@@ -14,33 +14,71 @@ body {
   color: #0b2545;
 }
 
-/* NAVBAR */
+/* =======================
+   NAVBAR
+======================= */
 
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 18px 10%;
+  background: white;
   border-bottom: 1px solid #e9eef5;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
-.logo {
+/* Logo */
+.navbar-logo {
   display: flex;
   align-items: center;
+  gap: 10px;
   font-size: 18px;
+  font-weight: 700;
+  color: #1a365d;
 }
 
-.nav {
+/* Desktop nav */
+.nav-links {
   display: flex;
-  gap: 24px;
+  gap: 28px;
 }
 
-.nav a {
+/* Nav links */
+.nav-links a {
   text-decoration: none;
   color: #1a365d;
   font-weight: 500;
+  padding: 6px 2px;
+  position: relative;
 }
 
+/* Hover underline animation */
+.nav-links a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0;
+  height: 2px;
+  background: #1a3c6e;
+  transition: width 0.25s ease;
+}
+
+.nav-links a:hover::after,
+.nav-links a.active::after {
+  width: 100%;
+}
+
+/* Active link */
+.nav-links a.active {
+  color: #1a3c6e;
+  font-weight: 600;
+}
+
+/* Hamburger */
 .hamburger {
   display: none;
   flex-direction: column;
@@ -49,9 +87,52 @@ body {
 }
 
 .hamburger span {
-  width: 24px;
+  width: 26px;
   height: 3px;
   background: #1a365d;
+  transition: 0.3s;
+  border-radius: 2px;
+}
+
+/* Hamburger animation */
+.hamburger.open span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.hamburger.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.open span:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/* =======================
+   MOBILE
+======================= */
+
+@media (max-width: 768px) {
+  .hamburger {
+    display: flex;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .nav-links.mobile.show {
+    display: flex;
+    position: absolute;
+    top: 70px;
+    right: 10%;
+    flex-direction: column;
+    gap: 16px;
+    background: white;
+    padding: 18px 22px;
+    border-radius: 14px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e3e9f5;
+  }
 }
 
 /* HERO */
@@ -252,4 +333,3 @@ select {
   padding: 14px;
   border-radius: 12px;
 }
-

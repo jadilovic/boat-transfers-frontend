@@ -1,38 +1,43 @@
 import { useState, useEffect } from "react";
+import { NavLink } from "react-router-dom";
+import "../App.css";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
+  // Handle resize properly
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    handleResize(); // set initial value
+    const handleResize = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+
+      // Close menu automatically when switching to desktop
+      if (!mobile) {
+        setMenuOpen(false);
+      }
+    };
+
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // Close menu after clicking a link (mobile UX fix)
+  const handleNavClick = () => {
+    if (isMobile) {
+      setMenuOpen(false);
+    }
+  };
+
   return (
-    <header
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: "20px 40px",
-        background: "#fff",
-        boxShadow: "0 2px 6px rgba(0,0,0,0.05)",
-        position: "sticky",
-        top: 0,
-        zIndex: 100,
-      }}
-    >
-      {/* Logo with boat SVG */}
-      <div style={{ display: "flex", alignItems: "center" }}>
+    <header className="navbar">
+      {/* Logo */}
+      <div className="navbar-logo">
         <svg
           width="36"
           height="24"
           viewBox="0 0 260 160"
           xmlns="http://www.w3.org/2000/svg"
-          style={{ marginRight: 10 }}
         >
           <rect x="40" y="80" width="160" height="20" rx="6" fill="#1a3c6e" />
           <polygon points="40,80 200,80 180,110 60,110" fill="#274b89" />
@@ -40,48 +45,38 @@ export default function Navbar() {
           <polygon points="116,30 170,65 116,65" fill="#d9e7ff" />
           <path d="M0 120 Q130 160 260 120" fill="#a8d8ff" />
         </svg>
-        <span style={{ fontWeight: 700, fontSize: "1.2rem" }}>
-          Island Boat Transfers
-        </span>
+        <span>Island Boat Transfers</span>
       </div>
 
-      {/* Hamburger only on mobile */}
+      {/* Hamburger (mobile only) */}
       {isMobile && (
         <div
-          onClick={() => setMenuOpen(!menuOpen)}
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 4,
-            cursor: "pointer",
-          }}
+          className={`hamburger ${menuOpen ? "open" : ""}`}
+          onClick={() => setMenuOpen((prev) => !prev)}
         >
-          <span style={{ display: "block", width: 25, height: 3, background: "#333", transition: "0.3s", transform: menuOpen ? "rotate(45deg) translate(5px, 5px)" : "none" }} />
-          <span style={{ display: "block", width: 25, height: 3, background: "#333", opacity: menuOpen ? 0 : 1, transition: "0.3s" }} />
-          <span style={{ display: "block", width: 25, height: 3, background: "#333", transition: "0.3s", transform: menuOpen ? "rotate(-45deg) translate(5px, -5px)" : "none" }} />
+          <span />
+          <span />
+          <span />
         </div>
       )}
 
       {/* Navigation */}
       <nav
-        style={{
-          display: isMobile ? (menuOpen ? "flex" : "none") : "flex",
-          flexDirection: isMobile ? "column" : "row",
-          gap: 20,
-          position: isMobile ? "absolute" : "static",
-          top: isMobile ? "70px" : "auto",
-          right: isMobile ? "20px" : "auto",
-          background: isMobile ? "#fff" : "transparent",
-          padding: isMobile ? "20px" : 0,
-          borderRadius: isMobile ? 12 : 0,
-          boxShadow: isMobile ? "0 4px 12px rgba(0,0,0,0.1)" : "none",
-          transition: "all 0.3s ease",
-          zIndex: 90,
-        }}
+        className={`nav-links ${isMobile ? "mobile" : ""} ${
+          menuOpen ? "show" : ""
+        }`}
       >
-        <a href="/" style={{ padding: 8 }}>Home</a>
-        <a href="/calculator" style={{ padding: 8 }}>Calculator</a>
-        <a href="#" style={{ padding: 8 }}>About</a>
+        <NavLink to="/" end onClick={handleNavClick}>
+          Home
+        </NavLink>
+
+        <NavLink to="/calculator" onClick={handleNavClick}>
+          Calculator
+        </NavLink>
+
+        <NavLink to="/about" onClick={handleNavClick}>
+          About
+        </NavLink>
       </nav>
     </header>
   );

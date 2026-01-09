@@ -1,10 +1,9 @@
 import { useState } from "react";
 import Layout from "../components/Layout";
 
-
 export default function Calculator() {
   const docks = [
-    { name: "Zadar Port (Old Town)", lat: 44.12149, lng: 15.22143 },
+    { name: "Zadar Port (Old Town)", lat: 44.1104865172623, lng: 15.227503253176431},
     { name: "Zadar Gazenica Port", lat: 44.0924, lng: 15.2624 },
     { name: "Marina Zadar (Tankerkomerc)", lat: 44.1192, lng: 15.2277 },
     { name: "Uvala Fosa (Small Harbor)", lat: 44.11215, lng: 15.22823 },
@@ -18,6 +17,7 @@ export default function Calculator() {
 
   const [fromDock, setFromDock] = useState("");
   const [toDock, setToDock] = useState("");
+  const [passengers, setPassengers] = useState(1);
   const [distance, setDistance] = useState(null);
   const [price, setPrice] = useState(null);
   const [error, setError] = useState("");
@@ -37,13 +37,13 @@ export default function Calculator() {
     return +(R * c).toFixed(2);
   }
 
-  function calculatePrice(km) {
+  function calculateBasePrice(km) {
     const BASE = 25;
     const PER_KM = 3.2;
     const MIN = 40;
 
     const total = BASE + km * PER_KM;
-    return Math.max(total, MIN).toFixed(2);
+    return Math.max(total, MIN);
   }
 
   function handleCalculate() {
@@ -61,21 +61,33 @@ export default function Calculator() {
       return;
     }
 
+    if (passengers < 1) {
+      setError("At least one passenger is required.");
+      return;
+    }
+
     const start = docks.find((d) => d.name === fromDock);
     const end = docks.find((d) => d.name === toDock);
 
     const km = getDistance(start.lat, start.lng, end.lat, end.lng);
     setDistance(km);
 
-    const tripPrice = calculatePrice(km);
-    setPrice(tripPrice);
+    const basePrice = calculateBasePrice(km);
+    const passengerPrice = passengers * 10;
+    const totalPrice = basePrice + passengerPrice;
+
+    setPrice({
+      base: basePrice.toFixed(2),
+      passengers: passengerPrice.toFixed(2),
+      total: totalPrice.toFixed(2)
+    });
   }
 
   return (
     <Layout>
       <div style={{ maxWidth: 600, margin: "0 auto" }}>
         <h2>Trip Price Calculator</h2>
-        <p>Select your route to estimate distance and price:</p>
+        <p>Select your route and passengers to estimate price:</p>
 
         <div className="calc-box">
           <div className="input-row">
@@ -118,16 +130,30 @@ export default function Calculator() {
             </div>
           </div>
 
+          <div style={{ marginTop: 16 }}>
+            <label>Passengers</label>
+            <input
+              type="number"
+              min="1"
+              value={passengers}
+              onChange={(e) => setPassengers(Number(e.target.value))}
+              style={{ width: "100%", padding: 8 }}
+            />
+          </div>
+
           <button className="calc-btn" onClick={handleCalculate}>
             Calculate
           </button>
 
           {error && <p className="error">{error}</p>}
 
-          {distance && (
+          {distance && price && (
             <div className="result">
-              <p>Distance: <strong>{distance} km</strong></p>
-              <p>Estimated Price: <strong>€{price}</strong></p>
+              <p><strong>Distance:</strong> {distance} km</p>
+              <p><strong>Base price:</strong> €{price.base}</p>
+              <p><strong>Passengers:</strong> €{price.passengers}</p>
+              <hr />
+              <p><strong>Total price:</strong> €{price.total}</p>
             </div>
           )}
         </div>
