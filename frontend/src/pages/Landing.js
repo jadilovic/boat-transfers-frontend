@@ -1,8 +1,6 @@
-import { useState } from "react";
 import Layout from "../components/Layout";
 
 export default function Landing() {
-  const [menuOpen, setMenuOpen] = useState(false); // can still control menu state if needed in Layout
 
   return (
     <Layout>

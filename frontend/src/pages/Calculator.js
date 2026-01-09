@@ -1,9 +1,30 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import Layout from "../components/Layout";
+import DockMap from "../components/DockMap";
+
+// Helper: calculate distance between two coordinates (km)
+const getDistance = (lat1, lon1, lat2, lon2) => {
+  const R = 6371;
+  const φ1 = (lat1 * Math.PI) / 180;
+  const φ2 = (lat2 * Math.PI) / 180;
+  const Δφ = ((lat2 - lat1) * Math.PI) / 180;
+  const Δλ = ((lon2 - lon1) * Math.PI) / 180;
+
+  const a =
+    Math.sin(Δφ / 2) ** 2 +
+    Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) ** 2;
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  return +(R * c).toFixed(2);
+};
+
+// Helper: calculate base fare
+const calculateBasePrice = (km) => Math.max(25 + km * 3.2, 40);
 
 export default function Calculator() {
-  const docks = [
-    { name: "Zadar Port (Old Town)", lat: 44.1104865172623, lng: 15.227503253176431},
+
+  const docks = useMemo(() => [
+    { name: "Zadar Port (Old Town)", lat: 44.1104865172623, lng: 15.227503253176431 },
     { name: "Zadar Gazenica Port", lat: 44.0924, lng: 15.2624 },
     { name: "Marina Zadar (Tankerkomerc)", lat: 44.1192, lng: 15.2277 },
     { name: "Uvala Fosa (Small Harbor)", lat: 44.11215, lng: 15.22823 },
@@ -13,7 +34,7 @@ export default function Calculator() {
     { name: "Brbinj (Iž Island)", lat: 44.08195, lng: 14.99381 },
     { name: "Sali Port (Dugi Otok)", lat: 43.93694, lng: 15.16878 },
     { name: "Marina Veli Iž (Iž Island)", lat: 44.05202, lng: 15.11062 }
-  ];
+  ], []); // empty dependency array → docks is stable
 
   const [fromDock, setFromDock] = useState("");
   const [toDock, setToDock] = useState("");
@@ -22,46 +43,21 @@ export default function Calculator() {
   const [price, setPrice] = useState(null);
   const [error, setError] = useState("");
 
-  // Automatic recalculation when inputs change
-  useEffect(() => {
-    if (fromDock && toDock && passengers >= 1) {
-      calculatePrice();
-    } else {
-      setDistance(null);
-      setPrice(null);
-    }
-  }, [fromDock, toDock, passengers]);
+  // Calculate price (memoized)
+  const calculatePrice = useCallback(() => {
+    if (!fromDock || !toDock) return;
 
-  function getDistance(lat1, lon1, lat2, lon2) {
-    const R = 6371;
-    const φ1 = (lat1 * Math.PI) / 180;
-    const φ2 = (lat2 * Math.PI) / 180;
-    const Δφ = ((lat2 - lat1) * Math.PI) / 180;
-    const Δλ = ((lon2 - lon1) * Math.PI) / 180;
-
-    const a =
-      Math.sin(Δφ / 2) ** 2 +
-      Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) ** 2;
-
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return +(R * c).toFixed(2);
-  }
-
-  function calculateBasePrice(km) {
-    const BASE = 25;
-    const PER_KM = 3.2;
-    const MIN = 40;
-    return Math.max(BASE + km * PER_KM, MIN);
-  }
-
-  function calculatePrice() {
     if (fromDock === toDock) {
       setError("Departure and destination cannot be the same.");
+      setDistance(null);
+      setPrice(null);
       return;
     }
 
     if (passengers < 1) {
       setError("At least one passenger is required.");
+      setDistance(null);
+      setPrice(null);
       return;
     }
 
@@ -80,9 +76,19 @@ export default function Calculator() {
     setPrice({
       base: basePrice.toFixed(2),
       passengers: passengerPrice.toFixed(2),
-      total: totalPrice.toFixed(2)
+      total: totalPrice.toFixed(2),
     });
-  }
+  }, [fromDock, toDock, passengers, docks]);
+
+  // Automatic recalculation when inputs change
+  useEffect(() => {
+    if (fromDock && toDock && passengers >= 1) {
+      calculatePrice();
+    } else {
+      setDistance(null);
+      setPrice(null);
+    }
+  }, [fromDock, toDock, passengers, calculatePrice]);
 
   return (
     <Layout>
@@ -175,6 +181,7 @@ export default function Calculator() {
               </div>
             </div>
           )}
+          <DockMap docks={docks} fromDock={fromDock} toDock={toDock} />
         </div>
       </div>
     </Layout>

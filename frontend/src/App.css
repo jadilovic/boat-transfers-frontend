@@ -14,6 +14,26 @@ body {
   color: #0b2545;
 }
 
+/* Layout wrapper */
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Main content padding (desktop/tablet) */
+.layout-main {
+  flex: 1;
+  padding: 20px 40px;
+}
+
+/* Mobile: no padding */
+@media (max-width: 768px) {
+  .layout-main {
+    padding: 0;
+  }
+}
+
 /* =======================
    NAVBAR
 ======================= */

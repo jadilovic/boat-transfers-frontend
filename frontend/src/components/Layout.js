@@ -1,19 +1,12 @@
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import "../App.css";
 
 export default function Layout({ children }) {
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        minHeight: "100vh", // ensures footer is at bottom
-      }}
-    >
+    <div className="layout">
       <Navbar />
-
-      <main style={{ flex: 1, padding: "20px 40px" }}>{children}</main>
-
+      <main className="layout-main">{children}</main>
       <Footer />
     </div>
   );
