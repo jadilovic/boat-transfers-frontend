@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Layout from "../components/Layout";
 
 export default function Calculator() {
@@ -17,10 +17,20 @@ export default function Calculator() {
 
   const [fromDock, setFromDock] = useState("");
   const [toDock, setToDock] = useState("");
-  const [passengers, setPassengers] = useState("");
+  const [passengers, setPassengers] = useState(1);
   const [distance, setDistance] = useState(null);
   const [price, setPrice] = useState(null);
   const [error, setError] = useState("");
+
+  // Automatic recalculation when inputs change
+  useEffect(() => {
+    if (fromDock && toDock && passengers >= 1) {
+      calculatePrice();
+    } else {
+      setDistance(null);
+      setPrice(null);
+    }
+  }, [fromDock, toDock, passengers]);
 
   function getDistance(lat1, lon1, lat2, lon2) {
     const R = 6371;
@@ -41,30 +51,21 @@ export default function Calculator() {
     const BASE = 25;
     const PER_KM = 3.2;
     const MIN = 40;
-
-    const total = BASE + km * PER_KM;
-    return Math.max(total, MIN);
+    return Math.max(BASE + km * PER_KM, MIN);
   }
 
-  function handleCalculate() {
-    setError("");
-    setDistance(null);
-    setPrice(null);
-
-    if (!fromDock || !toDock) {
-      setError("Please select both docks.");
-      return;
-    }
-
+  function calculatePrice() {
     if (fromDock === toDock) {
       setError("Departure and destination cannot be the same.");
       return;
     }
 
-    if (!passengers || passengers < 1) {
+    if (passengers < 1) {
       setError("At least one passenger is required.");
       return;
     }
+
+    setError("");
 
     const start = docks.find((d) => d.name === fromDock);
     const end = docks.find((d) => d.name === toDock);
@@ -83,6 +84,9 @@ export default function Calculator() {
     });
   }
 
+  const increment = () => setPassengers((prev) => Math.min(prev + 1, 10));
+  const decrement = () => setPassengers((prev) => Math.max(prev - 1, 1));
+
   return (
     <Layout>
       <div style={{ maxWidth: 600, margin: "0 auto" }}>
@@ -93,10 +97,7 @@ export default function Calculator() {
           <div className="input-row">
             <div className="field">
               <label>From</label>
-              <select
-                value={fromDock}
-                onChange={(e) => setFromDock(e.target.value)}
-              >
+              <select value={fromDock} onChange={(e) => setFromDock(e.target.value)}>
                 <option value="">Select dock</option>
                 {docks.map((d) => (
                   <option key={d.name} value={d.name} disabled={d.name === toDock}>
@@ -108,10 +109,7 @@ export default function Calculator() {
 
             <div className="field">
               <label>To</label>
-              <select
-                value={toDock}
-                onChange={(e) => setToDock(e.target.value)}
-              >
+              <select value={toDock} onChange={(e) => setToDock(e.target.value)}>
                 <option value="">Select dock</option>
                 {docks.map((d) => (
                   <option key={d.name} value={d.name} disabled={d.name === fromDock}>
@@ -123,20 +121,33 @@ export default function Calculator() {
 
             <div className="field">
               <label>Passengers</label>
-              <input
-                type="number"
-                min="1"
-                placeholder="1"
-                value={passengers}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  setPassengers(value === "" ? "" : Number(value));
-                }}
-              />
+
+              <div className="passenger-control">
+                <button
+                  type="button"
+                  onClick={() => setPassengers(p => Math.max(1, p - 1))}
+                >
+                  −
+                </button>
+
+                <input
+                  className="passenger-input"
+                  type="text"
+                  value={passengers}
+                  readOnly
+                />
+
+                <button
+                  type="button"
+                  onClick={() => setPassengers(p => Math.min(10, p + 1))}
+                >
+                  +
+                </button>
+              </div>
             </div>
           </div>
 
-          <button className="calc-btn" onClick={handleCalculate}>
+          <button className="calc-btn" onClick={calculatePrice}>
             Calculate
           </button>
 
@@ -165,7 +176,6 @@ export default function Calculator() {
               </div>
             </div>
           )}
-
         </div>
       </div>
     </Layout>
