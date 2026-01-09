@@ -84,12 +84,9 @@ export default function Calculator() {
     });
   }
 
-  const increment = () => setPassengers((prev) => Math.min(prev + 1, 10));
-  const decrement = () => setPassengers((prev) => Math.max(prev - 1, 1));
-
   return (
     <Layout>
-      <div style={{ maxWidth: 600, margin: "0 auto" }}>
+      <div style={{ maxWidth: 700, margin: "0 auto" }}>
         <h2>Trip Price Calculator</h2>
         <p>Select your route and passengers to estimate price:</p>
 
@@ -125,21 +122,23 @@ export default function Calculator() {
               <div className="passenger-control">
                 <button
                   type="button"
-                  onClick={() => setPassengers(p => Math.max(1, p - 1))}
+                  onClick={() => setPassengers((p) => Math.max(1, p - 1))}
+                  disabled={passengers <= 1}
                 >
                   −
                 </button>
 
                 <input
-                  className="passenger-input"
                   type="text"
+                  className="passenger-input"
                   value={passengers}
                   readOnly
                 />
 
                 <button
                   type="button"
-                  onClick={() => setPassengers(p => Math.min(10, p + 1))}
+                  onClick={() => setPassengers((p) => Math.min(10, p + 1))}
+                  disabled={passengers >= 10}
                 >
                   +
                 </button>

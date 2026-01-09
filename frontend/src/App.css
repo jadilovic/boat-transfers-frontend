@@ -291,7 +291,11 @@ body {
   border: 1px solid #e1e7ff;
   border-radius: 14px;
   padding: 20px;
+  width: 100%;
+  max-width: 700px;  /* wider on desktop */
+  margin: 0 auto;
 }
+
 
 label {
   font-size: 14px;
