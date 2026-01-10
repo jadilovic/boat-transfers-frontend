@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import Layout from "../components/Layout";
 import DockMap from "../components/DockMap";
+import "./Calculator.css";
 
 // Helper: calculate distance between two coordinates (km)
 const getDistance = (lat1, lon1, lat2, lon2) => {
@@ -43,9 +44,13 @@ export default function Calculator() {
   const [price, setPrice] = useState(null);
   const [error, setError] = useState("");
 
-  // Calculate price (memoized)
   const calculatePrice = useCallback(() => {
-    if (!fromDock || !toDock) return;
+    if (!fromDock || !toDock) {
+      setError("Please select both departure and destination docks.");
+      setDistance(null);
+      setPrice(null);
+      return;
+    }
 
     if (fromDock === toDock) {
       setError("Departure and destination cannot be the same.");
@@ -79,6 +84,7 @@ export default function Calculator() {
       total: totalPrice.toFixed(2),
     });
   }, [fromDock, toDock, passengers, docks]);
+
 
   // Automatic recalculation when inputs change
   useEffect(() => {
@@ -181,7 +187,20 @@ export default function Calculator() {
               </div>
             </div>
           )}
-          <DockMap docks={docks} fromDock={fromDock} toDock={toDock} />
+          {!fromDock && !toDock && (
+            <p className="map-hint">
+              📍 Select a dock to display it on the map.
+            </p>
+          )}
+
+          {(fromDock || toDock) && !fromDock !== !toDock && (
+            <p className="map-hint">
+              📍 Select the second dock to display the full distance.
+            </p>
+          )}
+          {(fromDock || toDock) && (
+            <DockMap docks={docks} fromDock={fromDock} toDock={toDock} />
+          )}
         </div>
       </div>
     </Layout>

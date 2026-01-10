@@ -1,0 +1,192 @@
+/* =======================
+   CALCULATOR WRAPPER
+======================= */
+
+.calculator {
+  max-width: 720px;
+  margin: 40px auto;
+}
+
+/* =======================
+   CALC BOX
+======================= */
+
+.calc-box {
+  background: #f7f9fe;
+  border: 1px solid #e1e7ff;
+  border-radius: 14px;
+  padding: 20px;
+  width: 100%;
+  max-width: 700px;
+  margin: 20px auto 0;
+}
+
+/* =======================
+   INPUT ROWS
+======================= */
+
+.input-row {
+  display: flex;
+  gap: 18px;
+  align-items: flex-end;
+}
+
+@media (max-width: 768px) {
+  .input-row {
+    flex-direction: column;
+  }
+}
+
+/* =======================
+   FIELDS
+======================= */
+
+.field {
+  flex: 1;
+  min-width: 0;
+}
+
+.field label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #274b7a;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.field select,
+.field input {
+  width: 100%;
+  height: 42px;
+  padding: 0 12px;
+  border-radius: 10px;
+  border: 1px solid #cfd7f3;
+  font-size: 14px;
+  background: white;
+}
+
+/* =======================
+   PASSENGER CONTROL
+======================= */
+
+.passenger-control {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 42px;
+  border: 1px solid #cfd7f3;
+  border-radius: 10px;
+  background: white;
+  overflow: hidden;
+}
+
+.passenger-control button {
+  width: 42px;
+  height: 100%;
+  flex-shrink: 0;
+  border: none;
+  background: #f0f4ff;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.passenger-control button:hover:not(:disabled) {
+  background: #e3ecff;
+}
+
+.passenger-control button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.passenger-input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: none;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  background: transparent;
+}
+
+/* =======================
+   BUTTON
+======================= */
+
+.calc-btn {
+  display: inline-block;
+  margin-top: 18px;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  background: #2f80ed;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.calc-btn:hover {
+  opacity: 0.9;
+}
+
+/* =======================
+   ERROR
+======================= */
+
+.error {
+  color: #c0392b;
+  margin-top: 12px;
+  font-size: 14px;
+}
+
+/* =======================
+   RESULT BOX
+======================= */
+
+.result {
+  margin-top: 18px;
+  background: white;
+  border-radius: 14px;
+  border: 1px solid #dfe6fb;
+  padding: 16px;
+}
+
+.result-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 14px;
+  color: #405a7a;
+}
+
+.result-total {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed #dfe6fb;
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a3c6e;
+}
+
+/* =======================
+   MAP SPACING
+======================= */
+
+.calc-box .leaflet-container {
+  margin-top: 20px;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.map-hint {
+  margin-top: 14px;
+  font-size: 13px;
+  color: #5a6f91;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 700;
+}
