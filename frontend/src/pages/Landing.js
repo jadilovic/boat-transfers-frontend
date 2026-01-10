@@ -1,12 +1,18 @@
 import Layout from "../components/Layout";
+import TransferChoice from "../components/TransferChoice";
+import BoatCalling from "../components/BoatCalling";
+import BoatBooking from "../components/BoatBooking";
+import "./Landing.css";
+import { useState } from "react";
 
 export default function Landing() {
+  const [selectedTransfer, setSelectedTransfer] = useState(null); // "calling" or "booking"
 
   return (
     <Layout>
-      {/* HERO SECTION */}
-      <section className="hero" style={{ display: "flex", gap: 40, flexWrap: "wrap", alignItems: "center", marginBottom: 60 }}>
-        <div className="hero-content" style={{ flex: 1 }}>
+      {/* HERO */}
+      <section className="hero">
+        <div className="hero-content">
           <h1>Fast. Private. Direct Boat Transfers.</h1>
           <p>
             Book a private transfer across the Zadar archipelago — quick,
@@ -14,17 +20,7 @@ export default function Landing() {
           </p>
           <button
             className="primary"
-            onClick={() => (window.location.href = "/calculator")}
-            style={{
-              marginTop: 20,
-              padding: "12px 24px",
-              borderRadius: 10,
-              background: "#2f80ed",
-              color: "#fff",
-              border: "none",
-              cursor: "pointer",
-              fontWeight: 600,
-            }}
+            onClick={() => window.scrollTo({ top: 600, behavior: "smooth" })}
           >
             Calculate Trip
           </button>
@@ -47,62 +43,29 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* BOOKING FORM */}
-      <section className="booking" style={{ marginBottom: 60 }}>
-        <h2>Request a Ride</h2>
-        <form style={{ display: "flex", flexDirection: "column", gap: 14, maxWidth: 400 }}>
-          <label>
-            Your name
-            <input placeholder="John Doe" style={{ padding: 10, borderRadius: 8, border: "1px solid #ccc" }} />
-          </label>
+      {/* TRANSFER CHOICE CARDS */}
+      <TransferChoice
+        selected={selectedTransfer}
+        onSelect={setSelectedTransfer} // ✅ pass proper prop name
+      />
 
-          <label>
-            Pickup location
-            <input placeholder="Eg. Zadar Marina" style={{ padding: 10, borderRadius: 8, border: "1px solid #ccc" }} />
-          </label>
-
-          <label>
-            Destination
-            <input placeholder="Eg. Dugi Otok" style={{ padding: 10, borderRadius: 8, border: "1px solid #ccc" }} />
-          </label>
-
-          <label>
-            Passengers
-            <input type="number" min="1" placeholder="1" style={{ padding: 10, borderRadius: 8, border: "1px solid #ccc" }} />
-          </label>
-
-          <button
-            type="button"
-            className="secondary"
-            style={{
-              padding: "10px 20px",
-              borderRadius: 10,
-              border: "1px solid #2f80ed",
-              background: "#fff",
-              color: "#2f80ed",
-              fontWeight: 600,
-              cursor: "pointer",
-              marginTop: 10,
-            }}
-          >
-            Send Request
-          </button>
-        </form>
-      </section>
+      {/* CONDITIONAL RENDERING OF TRANSFER FORMS */}
+      {selectedTransfer === "calling" && <BoatCalling />}
+      {selectedTransfer === "booking" && <BoatBooking />}
 
       {/* FEATURES */}
-      <section className="features" style={{ display: "flex", gap: 20, flexWrap: "wrap", marginBottom: 40 }}>
-        <div className="card" style={{ flex: 1, minWidth: 200, padding: 20, borderRadius: 12, background: "#f7f9fe", textAlign: "center" }}>
+      <section className="features">
+        <div className="card">
           <h3>⚓ Pickup Anywhere</h3>
           <p>Choose your island or harbor — we handle the rest.</p>
         </div>
 
-        <div className="card" style={{ flex: 1, minWidth: 200, padding: 20, borderRadius: 12, background: "#f7f9fe", textAlign: "center" }}>
+        <div className="card">
           <h3>💶 Transparent Pricing</h3>
           <p>No surprises — distance based pricing + per passenger.</p>
         </div>
 
-        <div className="card" style={{ flex: 1, minWidth: 200, padding: 20, borderRadius: 12, background: "#f7f9fe", textAlign: "center" }}>
+        <div className="card">
           <h3>⏱ Fast & Flexible</h3>
           <p>Schedule your ride — skip crowded ferries.</p>
         </div>

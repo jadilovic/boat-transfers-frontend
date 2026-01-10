@@ -1,0 +1,159 @@
+/* =======================
+   LANDING PAGE
+======================= */
+
+.landing {
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color: #0b2545;
+}
+
+/* =======================
+   HERO SECTION
+======================= */
+
+.hero {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 60px;
+  padding: 70px 10%;
+  background: linear-gradient(180deg, #f3f8ff 0%, #ffffff 60%);
+}
+
+.hero-content {
+  flex: 1;
+}
+
+.hero-content h1 {
+  font-size: 40px;
+  margin-bottom: 10px;
+}
+
+.hero-content p {
+  color: #506a91;
+  margin-bottom: 18px;
+}
+
+.hero-graphic {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.boat-graphic {
+  max-width: 100%;
+}
+
+/* CTA button */
+.hero .primary {
+  margin-top: 20px;
+  padding: 12px 24px;
+  border-radius: 10px;
+  background: #2f80ed;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.hero .primary:hover {
+  opacity: 0.9;
+}
+
+/* =======================
+   BOOKING FORM
+======================= */
+
+.booking {
+  margin-bottom: 60px;
+  padding: 60px 10%;
+  background: #f8fbff;
+}
+
+.booking h2 {
+  margin-bottom: 16px;
+}
+
+.booking form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 400px;
+}
+
+.booking label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  color: #274b7a;
+}
+
+.booking input {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #cfd9eb;
+}
+
+.booking .secondary {
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: 1px solid #2f80ed;
+  background: #fff;
+  color: #2f80ed;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.booking .secondary:hover {
+  background: #ecf3ff;
+}
+
+/* =======================
+   FEATURES
+======================= */
+
+.features {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+  padding: 0 10%;
+}
+
+.features .card {
+  flex: 1;
+  min-width: 200px;
+  padding: 20px;
+  border-radius: 12px;
+  background: #f7f9fe;
+  text-align: center;
+  border: 1px solid #e3e9f5;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.03);
+}
+
+.features .card h3 {
+  margin-bottom: 6px;
+}
+
+/* =======================
+   MOBILE
+======================= */
+
+@media (max-width: 900px) {
+  .hero {
+    flex-direction: column;
+    text-align: center;
+    padding: 50px 20px;
+  }
+
+  .booking {
+    padding: 40px 20px;
+  }
+
+  .features {
+    padding: 0 20px;
+  }
+}

@@ -190,3 +190,28 @@
   font-size: 16px;
   font-weight: 700;
 }
+
+/* =======================
+   CALCULATOR HEADER
+======================= */
+
+.calculator-header {
+  margin-bottom: 20px;
+}
+
+/* Mobile: center text + add vertical breathing room */
+@media (max-width: 768px) {
+  .calculator-header {
+    text-align: center;
+    padding: 20px 0; /* 👈 equal top & bottom padding */
+  }
+
+  .calculator-header h2 {
+    margin-bottom: 10px;
+  }
+
+  .calculator-header p {
+    color: #506a91;
+    font-size: 14px;
+  }
+}

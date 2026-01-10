@@ -99,8 +99,10 @@ export default function Calculator() {
   return (
     <Layout>
       <div style={{ maxWidth: 700, margin: "0 auto" }}>
+        <div className="calculator-header">
         <h2>Trip Price Calculator</h2>
         <p>Select your route and passengers to estimate price:</p>
+      </div>
 
         <div className="calc-box">
           <div className="input-row">

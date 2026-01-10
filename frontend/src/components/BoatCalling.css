@@ -1,0 +1,53 @@
+.boat-calling {
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 20px;
+  background: #f7f9fe;
+  border-radius: 14px;
+  border: 1px solid #e1e7ff;
+  text-align: center;
+}
+
+.boat-calling h2 {
+  font-size: 24px;
+  color: #1a3c6e;
+  margin-bottom: 20px;
+}
+
+.boat-calling p {
+  font-size: 14px;
+  color: #405a7a;
+  margin-bottom: 20px;
+}
+
+.boat-calling .error {
+  color: #c0392b;
+  font-weight: 600;
+}
+
+.boat-calling .success {
+  color: #27ae60;
+  font-weight: 600;
+}
+
+.boat-calling button {
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  background: #2f80ed;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.boat-calling button:hover {
+  opacity: 0.9;
+}
+
+/* Mobile padding */
+@media (max-width: 768px) {
+  .boat-calling {
+    padding: 16px;
+    margin: 20px 10px;
+  }
+}
