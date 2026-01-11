@@ -112,30 +112,64 @@
 }
 
 /* =======================
-   FEATURES
+   FEATURES SECTION
 ======================= */
 
 .features {
   display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-  margin-bottom: 40px;
-  padding: 0 10%;
+  gap: 24px;
+  justify-content: center;
+  align-items: stretch;
+  max-width: 1100px;
+  margin: 80px auto;
+  padding: 0 20px;
 }
 
 .features .card {
   flex: 1;
-  min-width: 200px;
-  padding: 20px;
-  border-radius: 12px;
-  background: #f7f9fe;
-  text-align: center;
+  background: white;
+  padding: 26px;
+  border-radius: 16px;
   border: 1px solid #e3e9f5;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.05);
+  text-align: center;
 }
 
 .features .card h3 {
-  margin-bottom: 6px;
+  font-size: 22px;
+  margin-bottom: 10px;
+  color: #1a365d;
+}
+
+.features .card p {
+  font-size: 16px;
+  color: #4a628a;
+  line-height: 1.5;
+}
+
+/* =======================
+   MOBILE STACKING
+======================= */
+
+@media (max-width: 768px) {
+  .features {
+    flex-direction: column;   /* ✅ vertical on mobile */
+    gap: 18px;
+    margin: 60px auto;
+    padding: 0 20px;
+  }
+
+  .features .card {
+    padding: 22px;
+  }
+
+  .features .card h3 {
+    font-size: 20px;
+  }
+
+  .features .card p {
+    font-size: 15px;
+  }
 }
 
 /* =======================
@@ -151,9 +185,5 @@
 
   .booking {
     padding: 40px 20px;
-  }
-
-  .features {
-    padding: 0 20px;
   }
 }

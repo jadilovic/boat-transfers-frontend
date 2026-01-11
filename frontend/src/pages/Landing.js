@@ -4,9 +4,11 @@ import BoatCalling from "../components/BoatCalling";
 import BoatBooking from "../components/BoatBooking";
 import "./Landing.css";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Landing() {
   const [selectedTransfer, setSelectedTransfer] = useState(null); // "calling" or "booking"
+  const navigate = useNavigate();
 
   return (
     <Layout>
@@ -18,9 +20,10 @@ export default function Landing() {
             Book a private transfer across the Zadar archipelago — quick,
             comfortable and transparent pricing.
           </p>
+
           <button
             className="primary"
-            onClick={() => window.scrollTo({ top: 600, behavior: "smooth" })}
+            onClick={() => navigate("/calculator")}
           >
             Calculate Trip
           </button>
