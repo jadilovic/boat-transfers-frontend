@@ -4,10 +4,16 @@ import "../App.css";
 
 export default function Layout({ children }) {
   return (
-    <div className="layout">
+    <div className="app-layout">
       <Navbar />
-      <main className="layout-main">{children}</main>
+
+      <main className="app-content">
+        {children}
+      </main>
+
       <Footer />
     </div>
   );
 }
+
+

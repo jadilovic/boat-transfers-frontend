@@ -1,16 +1,16 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import "./App.css";
-
+import { Routes, Route } from "react-router-dom";
 import Landing from "./pages/Landing";
+import BoatCalling from "./pages/BoatCallingPage";
+import BoatBooking from "./pages/BoatBookingPage";
 import Calculator from "./pages/Calculator";
 
 export default function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route path="/calculator" element={<Calculator />} />
-      </Routes>
-    </Router>
+    <Routes>
+      <Route path="/" element={<Landing />} />
+      <Route path="/calculator" element={<Calculator />} />
+      <Route path="/boat-calling" element={<BoatCalling />} />
+      <Route path="/boat-booking" element={<BoatBooking />} />
+    </Routes>
   );
 }

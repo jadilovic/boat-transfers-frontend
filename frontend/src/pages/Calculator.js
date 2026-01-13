@@ -98,112 +98,114 @@ export default function Calculator() {
 
   return (
     <Layout>
-      <div style={{ maxWidth: 700, margin: "0 auto" }}>
-        <div className="calculator-header">
-        <h2>Trip Price Calculator</h2>
-        <p>Select your route and passengers to estimate price:</p>
-      </div>
-
-        <div className="calc-box">
-          <div className="input-row">
-            <div className="field">
-              <label>From</label>
-              <select value={fromDock} onChange={(e) => setFromDock(e.target.value)}>
-                <option value="">Select dock</option>
-                {docks.map((d) => (
-                  <option key={d.name} value={d.name} disabled={d.name === toDock}>
-                    {d.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="field">
-              <label>To</label>
-              <select value={toDock} onChange={(e) => setToDock(e.target.value)}>
-                <option value="">Select dock</option>
-                {docks.map((d) => (
-                  <option key={d.name} value={d.name} disabled={d.name === fromDock}>
-                    {d.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="field">
-              <label>Passengers</label>
-
-              <div className="passenger-control">
-                <button
-                  type="button"
-                  onClick={() => setPassengers((p) => Math.max(1, p - 1))}
-                  disabled={passengers <= 1}
-                >
-                  −
-                </button>
-
-                <input
-                  type="text"
-                  className="passenger-input"
-                  value={passengers}
-                  readOnly
-                />
-
-                <button
-                  type="button"
-                  onClick={() => setPassengers((p) => Math.min(10, p + 1))}
-                  disabled={passengers >= 10}
-                >
-                  +
-                </button>
-              </div>
-            </div>
+      <div className="calculator-page">
+        <div className="calculator-container">
+          <div className="calculator-header">
+            <h2>Trip Price Calculator</h2>
+            <p>Select your route and passengers to estimate price:</p>
           </div>
 
-          <button className="calc-btn" onClick={calculatePrice}>
-            Calculate
-          </button>
-
-          {error && <p className="error">{error}</p>}
-
-          {distance && price && (
-            <div className="result">
-              <div className="result-row">
-                <span>Distance</span>
-                <strong>{distance} km</strong>
+          <div className="calc-box">
+            <div className="input-row">
+              <div className="field">
+                <label>From</label>
+                <select value={fromDock} onChange={(e) => setFromDock(e.target.value)}>
+                  <option value="">Select dock</option>
+                  {docks.map((d) => (
+                    <option key={d.name} value={d.name} disabled={d.name === toDock}>
+                      {d.name}
+                    </option>
+                  ))}
+                </select>
               </div>
 
-              <div className="result-row">
-                <span>Base fare</span>
-                <strong>€{price.base}</strong>
+              <div className="field">
+                <label>To</label>
+                <select value={toDock} onChange={(e) => setToDock(e.target.value)}>
+                  <option value="">Select dock</option>
+                  {docks.map((d) => (
+                    <option key={d.name} value={d.name} disabled={d.name === fromDock}>
+                      {d.name}
+                    </option>
+                  ))}
+                </select>
               </div>
 
-              <div className="result-row">
-                <span>Passengers ({passengers})</span>
-                <strong>€{price.passengers}</strong>
-              </div>
+              <div className="field">
+                <label>Passengers</label>
 
-              <div className="result-total">
-                <span>Total</span>
-                <strong>€{price.total}</strong>
+                <div className="passenger-control">
+                  <button
+                    type="button"
+                    onClick={() => setPassengers((p) => Math.max(1, p - 1))}
+                    disabled={passengers <= 1}
+                  >
+                    −
+                  </button>
+
+                  <input
+                    type="text"
+                    className="passenger-input"
+                    value={passengers}
+                    readOnly
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() => setPassengers((p) => Math.min(10, p + 1))}
+                    disabled={passengers >= 10}
+                  >
+                    +
+                  </button>
+                </div>
               </div>
             </div>
-          )}
-          {!fromDock && !toDock && (
-            <p className="map-hint">
-              📍 Select a dock to display it on the map.
-            </p>
-          )}
 
-          {(fromDock || toDock) && !fromDock !== !toDock && (
-            <p className="map-hint">
-              📍 Select the second dock to display the full distance.
-            </p>
-          )}
-          {(fromDock || toDock) && (
-            <DockMap docks={docks} fromDock={fromDock} toDock={toDock} />
-          )}
-        </div>
+            <button className="calc-btn" onClick={calculatePrice}>
+              Calculate
+            </button>
+
+            {error && <p className="error">{error}</p>}
+
+            {distance && price && (
+              <div className="result">
+                <div className="result-row">
+                  <span>Distance</span>
+                  <strong>{distance} km</strong>
+                </div>
+
+                <div className="result-row">
+                  <span>Base fare</span>
+                  <strong>€{price.base}</strong>
+                </div>
+
+                <div className="result-row">
+                  <span>Passengers ({passengers})</span>
+                  <strong>€{price.passengers}</strong>
+                </div>
+
+                <div className="result-total">
+                  <span>Total</span>
+                  <strong>€{price.total}</strong>
+                </div>
+              </div>
+            )}
+            {!fromDock && !toDock && (
+              <p className="map-hint">
+                📍 Select a dock to display it on the map.
+              </p>
+            )}
+
+            {(fromDock || toDock) && !fromDock !== !toDock && (
+              <p className="map-hint">
+                📍 Select the second dock to display the full distance.
+              </p>
+            )}
+            {(fromDock || toDock) && (
+              <DockMap docks={docks} fromDock={fromDock} toDock={toDock} />
+            )}
+          </div>
+        </div>  
       </div>
     </Layout>
   );

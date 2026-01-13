@@ -446,5 +446,15 @@ select {
   background: transparent;
 }
 
+.app-layout {
+  min-height: 100vh;          /* full viewport height */
+  display: flex;
+  flex-direction: column;
+}
+
+.app-content {
+  flex: 1;                    /* pushes footer down */
+}
+
 
 

@@ -195,10 +195,6 @@
    CALCULATOR HEADER
 ======================= */
 
-.calculator-header {
-  margin-bottom: 20px;
-}
-
 /* Mobile: center text + add vertical breathing room */
 @media (max-width: 768px) {
   .calculator-header {
@@ -215,3 +211,23 @@
     font-size: 14px;
   }
 }
+
+.calculator-page {
+  padding-top: 48px; /* space below navbar */
+  padding-bottom: 40px;
+}
+
+.calculator-container {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.calculator-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.calculator-header h2 {
+  margin-bottom: 8px;
+}
+

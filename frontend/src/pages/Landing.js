@@ -1,13 +1,9 @@
 import Layout from "../components/Layout";
 import TransferChoice from "../components/TransferChoice";
-import BoatCalling from "../components/BoatCalling";
-import BoatBooking from "../components/BoatBooking";
 import "./Landing.css";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function Landing() {
-  const [selectedTransfer, setSelectedTransfer] = useState(null); // "calling" or "booking"
   const navigate = useNavigate();
 
   return (
@@ -46,15 +42,13 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* TRANSFER CHOICE CARDS */}
+      {/* TRANSFER CHOICE */}
       <TransferChoice
-        selected={selectedTransfer}
-        onSelect={setSelectedTransfer} // ✅ pass proper prop name
+        onSelect={(type) => {
+          if (type === "calling") navigate("/boat-calling");
+          if (type === "booking") navigate("/boat-booking");
+        }}
       />
-
-      {/* CONDITIONAL RENDERING OF TRANSFER FORMS */}
-      {selectedTransfer === "calling" && <BoatCalling />}
-      {selectedTransfer === "booking" && <BoatBooking />}
 
       {/* FEATURES */}
       <section className="features">
