@@ -23,6 +23,12 @@ export default function Landing() {
           >
             Calculate Trip
           </button>
+          <button
+            className="secondary"
+            onClick={() => navigate("/dock-map")}
+          >
+            Choose on Map
+          </button>
         </div>
 
         <div className="hero-graphic">
