@@ -1,0 +1,19 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 260 160"
+  width="260"
+  height="160"
+>
+  <!-- Boat body -->
+  <rect x="40" y="80" width="160" height="20" rx="6" fill="#1a3c6e" />
+  <polygon points="40,80 200,80 180,110 60,110" fill="#274b89" />
+
+  <!-- Mast -->
+  <rect x="110" y="30" width="6" height="50" fill="#1a1a1a" />
+
+  <!-- Sail -->
+  <polygon points="116,30 170,65 116,65" fill="#d9e7ff" />
+
+  <!-- Water -->
+  <path d="M0 120 Q130 160 260 120" fill="#a8d8ff" />
+</svg>
