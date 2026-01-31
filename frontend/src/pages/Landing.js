@@ -17,18 +17,21 @@ export default function Landing() {
             comfortable and transparent pricing.
           </p>
 
-          <button
-            className="primary"
-            onClick={() => navigate("/calculator")}
-          >
-            Calculate Trip
-          </button>
-          <button
-            className="secondary"
-            onClick={() => navigate("/dock-map")}
-          >
-            Choose on Map
-          </button>
+          <div className="hero-actions">
+            <button
+              className="primary"
+              onClick={() => navigate("/calculator")}
+            >
+              Calculate Trip
+            </button>
+
+            <button
+              className="secondary"
+              onClick={() => navigate("/dock-map")}
+            >
+              Choose on Map
+            </button>
+          </div>
         </div>
 
         <div className="hero-graphic">

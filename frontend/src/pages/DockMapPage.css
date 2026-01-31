@@ -1,36 +1,63 @@
 .dock-map-page {
-  padding: 40px 16px;
+  flex: 1;                     /* 🔑 fills app-content */
+  display: flex;
+  flex-direction: column;
+  padding: 16px 20px;
+  gap: 12px;
+}
+
+.dock-map-page h2 {
   text-align: center;
 }
+
+.dock-map-page p {
+  text-align: center;
+  color: #506a91;
+}
+
+/* AREA SWITCH */
 
 .area-switch {
   display: flex;
   justify-content: center;
   gap: 12px;
-  margin: 20px 0;
+  margin-bottom: 8px;
 }
 
 .area-switch button {
   padding: 10px 18px;
   border-radius: 10px;
   border: 1px solid #2f80ed;
-  background: #fff;
+  background: white;
   cursor: pointer;
   font-weight: 600;
 }
 
 .area-switch button.active {
   background: #2f80ed;
-  color: #fff;
+  color: white;
 }
 
+/* MAP */
+
 .dock-map {
-  height: 420px;
-  border-radius: 14px;
+  flex: 1;                     /* 🔥 fills remaining space */
+  width: 100%;
+  border-radius: 16px;
   overflow: hidden;
 }
 
+/* Leaflet safety */
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+}
+
+/* FROM INDICATOR */
+
 .from-indicator {
-  margin-top: 16px;
+  text-align: center;
   font-size: 16px;
+  margin-top: 6px;
+  color: #1a365d;
 }

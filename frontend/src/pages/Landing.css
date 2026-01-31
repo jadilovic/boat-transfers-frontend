@@ -35,6 +35,59 @@
   margin-bottom: 18px;
 }
 
+/* CTA BUTTON SPACING */
+.hero-content button {
+  margin-top: 14px;
+}
+
+/* PRIMARY CTA */
+.hero .primary {
+  padding: 14px 28px;
+  border-radius: 14px;
+  background: #1a3c6e;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.hero .primary:hover {
+  background: #14325c;
+}
+
+/* SECONDARY CTA – Sea Blue */
+.hero .secondary {
+  padding: 14px 28px;
+  border-radius: 14px;
+  background: #a8d8ff;        /* 🌊 sea color from SVG */
+  color: #1a365d;             /* dark navy text */
+  border: 2px solid #7fc4f5;  /* slightly darker outline */
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.hero .secondary:hover {
+  background: #8fcbff;
+}
+
+/* HERO CTA BUTTON GROUP */
+.hero-actions {
+  display: flex;
+  gap: 16px;              /* ✅ space between buttons */
+  margin-top: 22px;
+  flex-wrap: wrap;        /* mobile safety */
+}
+
+/* Mobile: center buttons */
+@media (max-width: 900px) {
+  .hero-actions {
+    justify-content: center;
+  }
+}
+
+/* GRAPHIC */
 .hero-graphic {
   flex: 1;
   display: flex;
@@ -43,22 +96,6 @@
 
 .boat-graphic {
   max-width: 100%;
-}
-
-/* CTA button */
-.hero .primary {
-  margin-top: 20px;
-  padding: 12px 24px;
-  border-radius: 10px;
-  background: #2f80ed;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.hero .primary:hover {
-  opacity: 0.9;
 }
 
 /* =======================
@@ -152,8 +189,23 @@
 ======================= */
 
 @media (max-width: 768px) {
+  .hero {
+    flex-direction: column;
+    text-align: center;
+    padding: 50px 20px;
+  }
+
+  .hero-content button {
+    width: 100%;
+  }
+
+  .hero .secondary {
+    margin-left: 0;
+    margin-top: 12px;
+  }
+
   .features {
-    flex-direction: column;   /* ✅ vertical on mobile */
+    flex-direction: column;
     gap: 18px;
     margin: 60px auto;
     padding: 0 20px;
@@ -169,18 +221,6 @@
 
   .features .card p {
     font-size: 15px;
-  }
-}
-
-/* =======================
-   MOBILE
-======================= */
-
-@media (max-width: 900px) {
-  .hero {
-    flex-direction: column;
-    text-align: center;
-    padding: 50px 20px;
   }
 
   .booking {
