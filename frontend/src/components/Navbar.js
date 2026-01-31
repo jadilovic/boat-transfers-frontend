@@ -4,35 +4,31 @@ import "./Navbar.css";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isMobile, setIsMobile] = useState(false);
 
-  // Handle resize properly
   useEffect(() => {
     const handleResize = () => {
-      const mobile = window.innerWidth < 768;
+      const mobile = window.innerWidth <= 768;
       setIsMobile(mobile);
 
-      // Close menu automatically when switching to desktop
       if (!mobile) {
         setMenuOpen(false);
       }
     };
 
+    handleResize(); // initial check
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Close menu after clicking a link (mobile UX fix)
-  const handleNavClick = () => {
-    if (isMobile) {
-      setMenuOpen(false);
-    }
+  const closeMenu = () => {
+    if (isMobile) setMenuOpen(false);
   };
 
   return (
     <header className="navbar">
-      {/* Logo */}
-      <div className="navbar-logo">
+      {/* LOGO → HOME */}
+      <NavLink to="/" className="navbar-logo" onClick={closeMenu}>
         <svg
           width="36"
           height="24"
@@ -46,35 +42,33 @@ export default function Navbar() {
           <path d="M0 120 Q130 160 260 120" fill="#a8d8ff" />
         </svg>
         <span>Island Boat Transfers</span>
-      </div>
+      </NavLink>
 
-      {/* Hamburger (mobile only) */}
+      {/* HAMBURGER */}
       {isMobile && (
-        <div
+        <button
           className={`hamburger ${menuOpen ? "open" : ""}`}
           onClick={() => setMenuOpen((prev) => !prev)}
+          aria-label="Toggle navigation"
+          aria-expanded={menuOpen}
         >
           <span />
           <span />
           <span />
-        </div>
+        </button>
       )}
 
-      {/* Navigation */}
-      <nav
-        className={`nav-links ${isMobile ? "mobile" : ""} ${
-          menuOpen ? "show" : ""
-        }`}
-      >
-        <NavLink to="/" end onClick={handleNavClick}>
+      {/* NAV LINKS */}
+      <nav className={`nav-links ${menuOpen ? "open" : ""}`}>
+        <NavLink to="/" end onClick={closeMenu}>
           Home
         </NavLink>
 
-        <NavLink to="/calculator" onClick={handleNavClick}>
+        <NavLink to="/calculator" onClick={closeMenu}>
           Calculator
         </NavLink>
 
-        <NavLink to="/about" onClick={handleNavClick}>
+        <NavLink to="/about" onClick={closeMenu}>
           About
         </NavLink>
       </nav>

@@ -3,18 +3,21 @@
 ======================= */
 
 .navbar {
+  position: sticky;
+  top: 0;
+  z-index: 10000; /* 🔥 higher than leaflet */
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 18px 10%;
   background: white;
   border-bottom: 1px solid #e9eef5;
-  position: sticky;
-  top: 0;
-  z-index: 100;
 }
 
-/* Logo */
+/* =======================
+   LOGO
+======================= */
+
 .navbar-logo {
   display: flex;
   align-items: center;
@@ -22,24 +25,30 @@
   font-size: 18px;
   font-weight: 700;
   color: #1a365d;
+  text-decoration: none;
 }
 
-/* Desktop nav */
+.navbar-logo:hover {
+  opacity: 0.85;
+}
+
+/* =======================
+   DESKTOP NAV
+======================= */
+
 .nav-links {
   display: flex;
   gap: 28px;
 }
 
-/* Nav links */
 .nav-links a {
   text-decoration: none;
   color: #1a365d;
   font-weight: 500;
-  padding: 6px 2px;
   position: relative;
 }
 
-/* Hover underline animation */
+/* underline animation */
 .nav-links a::after {
   content: "";
   position: absolute;
@@ -56,9 +65,7 @@
   width: 100%;
 }
 
-/* Active link */
 .nav-links a.active {
-  color: #1a3c6e;
   font-weight: 600;
 }
 
@@ -71,17 +78,18 @@
   flex-direction: column;
   gap: 5px;
   cursor: pointer;
+  background: none;
+  border: none;
 }
 
 .hamburger span {
   width: 26px;
   height: 3px;
   background: #1a365d;
-  transition: 0.3s;
   border-radius: 2px;
+  transition: 0.3s;
 }
 
-/* Hamburger animation */
 .hamburger.open span:nth-child(1) {
   transform: rotate(45deg) translate(5px, 5px);
 }
@@ -95,7 +103,7 @@
 }
 
 /* =======================
-   MOBILE
+   MOBILE MENU
 ======================= */
 
 @media (max-width: 768px) {
@@ -104,20 +112,21 @@
   }
 
   .nav-links {
-    display: none;
-  }
-
-  .nav-links.mobile.show {
-    display: flex;
     position: absolute;
-    top: 70px;
+    top: 100%;
     right: 10%;
+    display: none;
     flex-direction: column;
     gap: 16px;
     background: white;
     padding: 18px 22px;
-    border-radius: 14px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
     border: 1px solid #e3e9f5;
+    z-index: 10001; /* 🔥 above map */
+  }
+
+  .nav-links.open {
+    display: flex;
   }
 }

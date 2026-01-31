@@ -1,10 +1,34 @@
 /* =======================
-   CALCULATOR WRAPPER
+   CALCULATOR PAGE
 ======================= */
 
-.calculator {
+.calculator-page {
+  padding-top: 48px;
+  padding-bottom: 40px;
+}
+
+.calculator-container {
   max-width: 720px;
-  margin: 40px auto;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* =======================
+   HEADER
+======================= */
+
+.calculator-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.calculator-header h2 {
+  margin-bottom: 8px;
+}
+
+.calculator-header p {
+  color: #506a91;
+  font-size: 14px;
 }
 
 /* =======================
@@ -14,15 +38,13 @@
 .calc-box {
   background: #f7f9fe;
   border: 1px solid #e1e7ff;
-  border-radius: 14px;
+  border-radius: 16px;
   padding: 20px;
   width: 100%;
-  max-width: 700px;
-  margin: 20px auto 0;
 }
 
 /* =======================
-   INPUT ROWS
+   INPUT ROW
 ======================= */
 
 .input-row {
@@ -31,19 +53,29 @@
   align-items: flex-end;
 }
 
+/* 🔑 MOBILE FIX */
 @media (max-width: 768px) {
   .input-row {
     flex-direction: column;
+    align-items: center; /* 🔥 centers fields */
   }
 }
 
 /* =======================
-   FIELDS
+   FIELD
 ======================= */
 
 .field {
   flex: 1;
   min-width: 0;
+}
+
+/* 🔑 MOBILE FIX */
+@media (max-width: 768px) {
+  .field {
+    width: 100%;
+    max-width: 420px; /* 👈 visual centering */
+  }
 }
 
 .field label {
@@ -83,7 +115,6 @@
 .passenger-control button {
   width: 42px;
   height: 100%;
-  flex-shrink: 0;
   border: none;
   background: #f0f4ff;
   font-size: 20px;
@@ -112,14 +143,14 @@
 }
 
 /* =======================
-   BUTTON
+   CALCULATE BUTTON
 ======================= */
 
 .calc-btn {
-  display: inline-block;
-  margin-top: 18px;
-  padding: 10px 20px;
-  border-radius: 10px;
+  display: block;            /* 🔑 */
+  margin: 22px auto 0;       /* 🔥 centered */
+  padding: 12px 24px;
+  border-radius: 12px;
   border: none;
   background: #2f80ed;
   color: white;
@@ -139,14 +170,15 @@
   color: #c0392b;
   margin-top: 12px;
   font-size: 14px;
+  text-align: center;
 }
 
 /* =======================
-   RESULT BOX
+   RESULT
 ======================= */
 
 .result {
-  margin-top: 18px;
+  margin-top: 20px;
   background: white;
   border-radius: 14px;
   border: 1px solid #dfe6fb;
@@ -173,7 +205,7 @@
 }
 
 /* =======================
-   MAP SPACING
+   MAP
 ======================= */
 
 .calc-box .leaflet-container {
@@ -182,52 +214,14 @@
   overflow: hidden;
 }
 
-.map-hint {
-  margin-top: 14px;
-  font-size: 13px;
-  color: #5a6f91;
-  text-align: center;
-  font-size: 16px;
-  font-weight: 700;
-}
-
 /* =======================
-   CALCULATOR HEADER
+   MAP HINT
 ======================= */
 
-/* Mobile: center text + add vertical breathing room */
-@media (max-width: 768px) {
-  .calculator-header {
-    text-align: center;
-    padding: 20px 0; /* 👈 equal top & bottom padding */
-  }
-
-  .calculator-header h2 {
-    margin-bottom: 10px;
-  }
-
-  .calculator-header p {
-    color: #506a91;
-    font-size: 14px;
-  }
-}
-
-.calculator-page {
-  padding-top: 48px; /* space below navbar */
-  padding-bottom: 40px;
-}
-
-.calculator-container {
-  max-width: 700px;
-  margin: 0 auto;
-}
-
-.calculator-header {
+.map-hint {
+  margin-top: 16px;
+  font-size: 14px;
+  color: #5a6f91;
   text-align: center;
-  margin-bottom: 24px;
+  font-weight: 600;
 }
-
-.calculator-header h2 {
-  margin-bottom: 8px;
-}
-
