@@ -5,14 +5,30 @@ import BoatBooking from "./pages/BoatBookingPage";
 import Calculator from "./pages/Calculator";
 import DockMapPage from "./pages/DockMapPage";
 
+import AdminRoute from "./routes/AdminRoute";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import Login from "./pages/Login";
+
 export default function App() {
   return (
     <Routes>
+      {/* Public routes */}
       <Route path="/" element={<Landing />} />
       <Route path="/calculator" element={<Calculator />} />
       <Route path="/boat-calling" element={<BoatCalling />} />
       <Route path="/boat-booking" element={<BoatBooking />} />
       <Route path="/dock-map" element={<DockMapPage />} />
+      <Route path="/login" element={<Login />} />
+
+      {/* Admin routes */}
+      <Route
+        path="/admin"
+        element={
+          <AdminRoute>
+            <AdminDashboard />
+          </AdminRoute>
+        }
+      />
     </Routes>
   );
 }
