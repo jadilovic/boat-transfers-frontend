@@ -1,43 +1,67 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import api from "../utils/api";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    const res = await fetch("http://localhost:5000/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password })
-    });
-
-    if (!res.ok) {
-      alert("Invalid credentials");
+    if (!email || !password) {
+      alert("Please enter email and password");
       return;
     }
 
-    const data = await res.json();
+    try {
+      setLoading(true);
 
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("user", JSON.stringify(data.user));
+      const { data } = await api.post("/auth/login", {
+        email,
+        password,
+      });
 
-    if (data.user.role === "admin") {
-      navigate("/admin");
-    } else {
-      navigate("/");
+      // ❗ Block unverified users
+      if (!data.user.isEmailVerified) {
+        alert("Please verify your email before logging in.");
+        return;
+      }
+
+      // Save auth data
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+      // Redirect based on role
+      if (data.user.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
+    } catch (error) {
+      console.error(error);
+
+      const message =
+        error.response?.data?.message ||
+        "Login failed. Please try again.";
+
+      alert(message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div style={{ padding: 40 }}>
+    <div style={{ padding: 40, maxWidth: 400, margin: "0 auto" }}>
       <h2>Login</h2>
 
       <input
+        type="email"
         placeholder="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
+        style={{ width: "100%", padding: 10 }}
       />
 
       <br /><br />
@@ -47,11 +71,18 @@ export default function Login() {
         placeholder="Password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
+        style={{ width: "100%", padding: 10 }}
       />
 
       <br /><br />
 
-      <button onClick={handleLogin}>Login</button>
+      <button
+        onClick={handleLogin}
+        disabled={loading}
+        style={{ width: "100%", padding: 12 }}
+      >
+        {loading ? "Logging in..." : "Login"}
+      </button>
     </div>
   );
 }
