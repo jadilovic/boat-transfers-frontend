@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const navigate = useNavigate();
+
+  const isAuthenticated = !!localStorage.getItem("token");
 
   useEffect(() => {
     const handleResize = () => {
@@ -16,13 +19,21 @@ export default function Navbar() {
       }
     };
 
-    handleResize(); // initial check
+    handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const closeMenu = () => {
     if (isMobile) setMenuOpen(false);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    closeMenu();
+    navigate("/");
   };
 
   return (
@@ -71,6 +82,16 @@ export default function Navbar() {
         <NavLink to="/about" onClick={closeMenu}>
           About
         </NavLink>
+
+        {/* LOGOUT (only if logged in) */}
+        {isAuthenticated && (
+          <button
+            className="logout-btn"
+            onClick={handleLogout}
+          >
+            Logout
+          </button>
+        )}
       </nav>
     </header>
   );

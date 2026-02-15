@@ -130,3 +130,17 @@
     display: flex;
   }
 }
+
+.logout-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  padding: 0.5rem 1rem;
+}
+
+.logout-btn:hover {
+  opacity: 0.8;
+}
+

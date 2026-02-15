@@ -2,9 +2,12 @@ import Layout from "../components/Layout";
 import TransferChoice from "../components/TransferChoice";
 import "./Landing.css";
 import { useNavigate } from "react-router-dom";
+import { isLoggedIn } from "../utils/auth";
 
 export default function Landing() {
   const navigate = useNavigate();
+  // const user = getAuthUser();
+  const isAuthenticated = isLoggedIn();
 
   return (
     <Layout>
@@ -53,6 +56,7 @@ export default function Landing() {
 
       {/* TRANSFER CHOICE */}
       <TransferChoice
+        isAuthenticated={isAuthenticated}
         onSelect={(type) => {
           if (type === "calling") navigate("/boat-calling");
           if (type === "booking") navigate("/boat-booking");
