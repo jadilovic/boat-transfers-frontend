@@ -1,9 +1,8 @@
 import bcrypt from "bcryptjs";
 import { supabase } from "../config/supabase.js";
 
-export const createUser = async (userData) => {
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(userData.password, salt);
+export async function createUser(userData) {
+  const hashedPassword = await bcrypt.hash(userData.password, 10);
 
   const { data, error } = await supabase
     .from("users")
@@ -23,9 +22,9 @@ export const createUser = async (userData) => {
   if (error) throw error;
 
   return data;
-};
+}
 
-export const findUserByEmail = async (email) => {
+export async function findUserByEmail(email) {
   const { data, error } = await supabase
     .from("users")
     .select("*")
@@ -35,8 +34,8 @@ export const findUserByEmail = async (email) => {
   if (error) return null;
 
   return data;
-};
+}
 
-export const matchPassword = async (enteredPassword, hashedPassword) => {
+export async function matchPassword(enteredPassword, hashedPassword) {
   return bcrypt.compare(enteredPassword, hashedPassword);
-};
+}

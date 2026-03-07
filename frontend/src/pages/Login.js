@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../utils/api";
+import { supabase } from "../utils/supabase";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -18,35 +18,62 @@ export default function Login() {
     try {
       setLoading(true);
 
-      const { data } = await api.post("/auth/login", {
+      // 1️⃣ Login with Supabase Auth
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      // ❗ Block unverified users
-      if (!data.user.isEmailVerified) {
-        alert("Please verify your email before logging in.");
+      if (error) {
+        alert(error.message);
         return;
       }
 
-      // Save auth data
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
+      const user = data.user;
 
-      // Redirect based on role
-      if (data.user.role === "admin") {
+      if (!user) {
+        alert("Login failed");
+        return;
+      }
+
+      // 2️⃣ Fetch role from your users table
+      const { data: profile, error: profileError } = await supabase
+        .from("users")
+        .select("role")
+        .eq("supabase_id", user.id)   // IMPORTANT FIX
+        .maybeSingle();
+
+      if (profileError) {
+        console.error(profileError);
+        alert("Could not fetch user role");
+        return;
+      }
+
+      if (!profile) {
+        alert("User profile not found");
+        return;
+      }
+
+      // 3️⃣ Save user info locally
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("role", profile.role);
+
+      // 4️⃣ Redirect based on role
+      if (profile.role === "admin") {
+        console.log("/admin");
+        
         navigate("/admin");
+      } else if (profile.role === "operator") {
+        console.log("/operator");
+        
+        navigate("/operator");
       } else {
         navigate("/");
       }
-    } catch (error) {
-      console.error(error);
 
-      const message =
-        error.response?.data?.message ||
-        "Login failed. Please try again.";
-
-      alert(message);
+    } catch (err) {
+      console.error(err);
+      alert("Login failed");
     } finally {
       setLoading(false);
     }
@@ -54,7 +81,7 @@ export default function Login() {
 
   return (
     <div style={{ padding: 40, maxWidth: 400, margin: "0 auto" }}>
-      <h2>Login</h2>
+      <h2>Boat App Login</h2>
 
       <input
         type="email"
