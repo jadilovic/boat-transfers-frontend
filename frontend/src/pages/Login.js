@@ -38,9 +38,9 @@ export default function Login() {
 
       // 2️⃣ Fetch role from your users table
       const { data: profile, error: profileError } = await supabase
-        .from("users")
+        .from("profiles")
         .select("role")
-        .eq("supabase_id", user.id)   // IMPORTANT FIX
+        .eq("id", user.id)
         .maybeSingle();
 
       if (profileError) {
@@ -60,12 +60,8 @@ export default function Login() {
 
       // 4️⃣ Redirect based on role
       if (profile.role === "admin") {
-        console.log("/admin");
-        
         navigate("/admin");
       } else if (profile.role === "operator") {
-        console.log("/operator");
-        
         navigate("/operator");
       } else {
         navigate("/");

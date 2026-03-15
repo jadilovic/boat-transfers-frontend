@@ -8,5 +8,5 @@ export const getAuthUser = () => {
 };
 
 export const isLoggedIn = () => {
-  return !!localStorage.getItem("token");
+  return !!localStorage.getItem("role");
 };

@@ -30,7 +30,7 @@ export default function TransferChoice({ isAuthenticated, onSelect }) {
               Create a free account to discover available routes,
               request instant pickups or book boats in advance.
             </p>
-            <button onClick={() => navigate("/register")}>
+            <button onClick={() => navigate("/register-traveler")}>
               Register
             </button>
           </div>
