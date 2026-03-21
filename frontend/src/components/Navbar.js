@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext"; // ✅ NEW
+import { useAuth } from "../context/AuthContext";
 import "./Navbar.css";
 
 export default function Navbar() {
@@ -9,18 +9,17 @@ export default function Navbar() {
 
   const navigate = useNavigate();
 
-  // ✅ Supabase Auth (instead of localStorage)
+  // Supabase Auth
   const { user, logout } = useAuth();
   const isAuthenticated = !!user;
 
+  // Handle mobile resize
   useEffect(() => {
     const handleResize = () => {
       const mobile = window.innerWidth <= 768;
       setIsMobile(mobile);
 
-      if (!mobile) {
-        setMenuOpen(false);
-      }
+      if (!mobile) setMenuOpen(false);
     };
 
     handleResize();
@@ -32,11 +31,17 @@ export default function Navbar() {
     if (isMobile) setMenuOpen(false);
   };
 
-  // ✅ Proper logout using Supabase
+  // ✅ Proper logout handler
   const handleLogout = async () => {
-    await logout();
-    closeMenu();
-    navigate("/");
+    try {
+      if (logout) {
+        await logout(); // wait for Supabase to sign out
+      }
+      closeMenu();
+      navigate("/"); // redirect home
+    } catch (err) {
+      console.error("Logout failed:", err.message);
+    }
   };
 
   return (
@@ -86,7 +91,7 @@ export default function Navbar() {
           About
         </NavLink>
 
-        {/* ✅ Logout (only if logged in) */}
+        {/* Only show Logout if logged in */}
         {isAuthenticated && (
           <button className="logout-btn" onClick={handleLogout}>
             Logout

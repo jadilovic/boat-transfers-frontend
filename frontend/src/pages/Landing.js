@@ -2,12 +2,14 @@ import Layout from "../components/Layout";
 import TransferChoice from "../components/TransferChoice";
 import "./Landing.css";
 import { useNavigate } from "react-router-dom";
-import { isLoggedIn } from "../utils/auth";
+import { useAuth } from "../context/AuthContext";
 
 export default function Landing() {
   const navigate = useNavigate();
-  // const user = getAuthUser();
-  const isAuthenticated = isLoggedIn();
+
+  // ✅ MUST be inside component
+  const { user } = useAuth();
+  const isAuthenticated = !!user;
 
   return (
     <Layout>
