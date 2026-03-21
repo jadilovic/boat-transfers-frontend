@@ -1,10 +1,18 @@
+import { useAuth } from "../../context/AuthContext";
+
 export default function AdminDashboard() {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const { user, role, loading } = useAuth();
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <div style={{ padding: 40 }}>
       <h1>Admin Dashboard</h1>
+
       <p>Welcome, {user?.email}</p>
+      <p>Role: {role}</p>
 
       <ul>
         <li>Manage users</li>

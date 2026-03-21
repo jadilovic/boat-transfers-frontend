@@ -1,13 +1,17 @@
 import { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext"; // ✅ NEW
 import "./Navbar.css";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+
   const navigate = useNavigate();
 
-  const isAuthenticated = !!localStorage.getItem("token");
+  // ✅ Supabase Auth (instead of localStorage)
+  const { user, logout } = useAuth();
+  const isAuthenticated = !!user;
 
   useEffect(() => {
     const handleResize = () => {
@@ -28,10 +32,9 @@ export default function Navbar() {
     if (isMobile) setMenuOpen(false);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-
+  // ✅ Proper logout using Supabase
+  const handleLogout = async () => {
+    await logout();
     closeMenu();
     navigate("/");
   };
@@ -83,12 +86,9 @@ export default function Navbar() {
           About
         </NavLink>
 
-        {/* LOGOUT (only if logged in) */}
+        {/* ✅ Logout (only if logged in) */}
         {isAuthenticated && (
-          <button
-            className="logout-btn"
-            onClick={handleLogout}
-          >
+          <button className="logout-btn" onClick={handleLogout}>
             Logout
           </button>
         )}
