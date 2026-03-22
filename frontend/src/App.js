@@ -35,7 +35,7 @@ export default function App() {
       <Route path="/dock-map" element={<DockMapPage />} />
       <Route path="/auth/callback" element={<AuthCallback />} />
 
-      {/* 🔒 PROTECTED ROUTES (LOGGED-IN USERS ONLY) */}
+      {/* 🔒 PROTECTED ROUTES */}
       <Route
         path="/boat-calling"
         element={
@@ -54,7 +54,7 @@ export default function App() {
         }
       />
 
-      {/* GUEST-ONLY ROUTES */}
+      {/* 👤 GUEST ONLY */}
       <Route
         path="/login"
         element={
@@ -73,7 +73,7 @@ export default function App() {
         }
       />
 
-      {/* ADMIN ROUTE */}
+      {/* 🛠 ADMIN ONLY */}
       <Route
         path="/admin"
         element={

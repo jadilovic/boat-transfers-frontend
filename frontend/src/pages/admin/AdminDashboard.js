@@ -1,33 +1,8 @@
 import { useAuth } from "../../context/AuthContext";
-import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 import Layout from "../../components/Layout";
 
 export default function AdminDashboard() {
-  const { user, role, loading } = useAuth();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!loading) {
-      if (!user) {
-        navigate("/login", { replace: true });
-      } else if (role !== "admin") {
-        navigate("/", { replace: true });
-      }
-    }
-  }, [user, role, loading, navigate]);
-
-  // ⏳ Spinner instead of plain text
-  if (loading) {
-    return (
-      <Layout>
-        <div style={{ padding: 40, textAlign: "center" }}>
-          <div className="spinner" />
-          <p>Loading dashboard...</p>
-        </div>
-      </Layout>
-    );
-  }
+  const { user } = useAuth();
 
   return (
     <Layout>

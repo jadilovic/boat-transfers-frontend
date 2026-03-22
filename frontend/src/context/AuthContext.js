@@ -32,24 +32,31 @@ export function AuthProvider({ children }) {
     };
 
     const loadSession = async () => {
-      setLoading(true);
+      try {
+        const { data } = await supabase.auth.getSession();
+        const session = data?.session;
 
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
+        if (!isMounted) return;
 
-      if (!isMounted) return;
+        if (session?.user) {
+          setUser(session.user);
 
-      if (session?.user) {
-        setUser(session.user);
-        const role = await fetchUserRole(session.user.id);
-        if (isMounted) setRole(role);
-      } else {
+          // 🔥 DO NOT BLOCK loading on role
+          fetchUserRole(session.user.id).then((role) => {
+            if (isMounted) setRole(role);
+          });
+        } else {
+          setUser(null);
+          setRole(null);
+        }
+      } catch (err) {
+        console.error("Session load error:", err);
         setUser(null);
         setRole(null);
+      } finally {
+        // ✅ ALWAYS stop loading
+        if (isMounted) setLoading(false);
       }
-
-      setLoading(false); // ✅ ALWAYS stop loading
     };
 
     loadSession();
@@ -61,14 +68,17 @@ export function AuthProvider({ children }) {
 
       if (session?.user) {
         setUser(session.user);
-        const role = await fetchUserRole(session.user.id);
-        if (isMounted) setRole(role);
+
+        fetchUserRole(session.user.id).then((role) => {
+          if (isMounted) setRole(role);
+        });
       } else {
         setUser(null);
         setRole(null);
       }
 
-      setLoading(false); // ✅ ALWAYS stop loading
+      // ✅ NEVER leave loading true
+      setLoading(false);
     });
 
     return () => {

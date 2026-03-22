@@ -103,7 +103,7 @@ export default function Navbar() {
         <div style={{ marginLeft: "auto", display: "flex", gap: "10px", alignItems: "center" }}>
           
           {/* ⏳ Loading spinner */}
-          {loading && <div className="spinner" />}
+          {loading && !user && <div className="spinner" />}
 
           {/* 👤 User email */}
           {isAuthenticated && !loading && (
