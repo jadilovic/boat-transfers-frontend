@@ -14,28 +14,47 @@ import AuthCallback from "./pages/AuthCallback";
 
 // Routes
 import AdminRoute from "./routes/AdminRoute";
+import ProtectedRoute from "./routes/ProtectedRoute";
 
 // Guest-only wrapper
 function GuestRoute({ children }) {
   const { user, loading } = useAuth();
-  if (loading) return <p>Loading...</p>; // wait for session restore
-  if (user) return <Navigate to="/" replace />; // redirect logged-in users
+
+  if (loading) return <p>Loading...</p>;
+  if (user) return <Navigate to="/" replace />;
+
   return children;
 }
 
-// App component — NO Router, NO AuthProvider here
 export default function App() {
   return (
     <Routes>
-      {/* Public routes */}
+      {/* PUBLIC ROUTES */}
       <Route path="/" element={<Landing />} />
       <Route path="/calculator" element={<Calculator />} />
-      <Route path="/boat-calling" element={<BoatCalling />} />
-      <Route path="/boat-booking" element={<BoatBooking />} />
       <Route path="/dock-map" element={<DockMapPage />} />
       <Route path="/auth/callback" element={<AuthCallback />} />
 
-      {/* Guest-only routes */}
+      {/* 🔒 PROTECTED ROUTES (LOGGED-IN USERS ONLY) */}
+      <Route
+        path="/boat-calling"
+        element={
+          <ProtectedRoute>
+            <BoatCalling />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/boat-booking"
+        element={
+          <ProtectedRoute>
+            <BoatBooking />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* GUEST-ONLY ROUTES */}
       <Route
         path="/login"
         element={
@@ -44,6 +63,7 @@ export default function App() {
           </GuestRoute>
         }
       />
+
       <Route
         path="/register-traveler"
         element={
@@ -53,7 +73,7 @@ export default function App() {
         }
       />
 
-      {/* Admin-only route */}
+      {/* ADMIN ROUTE */}
       <Route
         path="/admin"
         element={
@@ -63,7 +83,7 @@ export default function App() {
         }
       />
 
-      {/* Catch-all redirect */}
+      {/* FALLBACK */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

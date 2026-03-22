@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "./Navbar.css";
 
@@ -7,10 +7,7 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
-  const navigate = useNavigate();
-
-  // Supabase Auth
-  const { user, logout } = useAuth();
+  const { user, loading, logout } = useAuth();
   const isAuthenticated = !!user;
 
   // Handle mobile resize
@@ -31,14 +28,14 @@ export default function Navbar() {
     if (isMobile) setMenuOpen(false);
   };
 
-  // ✅ Proper logout handler
+  // ✅ FIXED logout (no bugs, no stale state)
   const handleLogout = async () => {
     try {
-      if (logout) {
-        await logout(); // wait for Supabase to sign out
-      }
+      await logout();
       closeMenu();
-      navigate("/"); // redirect home
+
+      // force full reset
+      window.location.href = "/";
     } catch (err) {
       console.error("Logout failed:", err.message);
     }
@@ -46,7 +43,7 @@ export default function Navbar() {
 
   return (
     <header className="navbar">
-      {/* LOGO → HOME */}
+      {/* LOGO */}
       <NavLink to="/" className="navbar-logo" onClick={closeMenu}>
         <svg
           width="36"
@@ -68,8 +65,6 @@ export default function Navbar() {
         <button
           className={`hamburger ${menuOpen ? "open" : ""}`}
           onClick={() => setMenuOpen((prev) => !prev)}
-          aria-label="Toggle navigation"
-          aria-expanded={menuOpen}
         >
           <span />
           <span />
@@ -87,16 +82,49 @@ export default function Navbar() {
           Calculator
         </NavLink>
 
-        <NavLink to="/about" onClick={closeMenu}>
-          About
+        <NavLink to="/dock-map" onClick={closeMenu}>
+          Dock Map
         </NavLink>
 
-        {/* Only show Logout if logged in */}
+        {/* 🔒 Show protected links only if logged in */}
         {isAuthenticated && (
-          <button className="logout-btn" onClick={handleLogout}>
-            Logout
-          </button>
+          <>
+            <NavLink to="/boat-calling" onClick={closeMenu}>
+              Boat Calling
+            </NavLink>
+
+            <NavLink to="/boat-booking" onClick={closeMenu}>
+              Boat Booking
+            </NavLink>
+          </>
         )}
+
+        {/* RIGHT SIDE */}
+        <div style={{ marginLeft: "auto", display: "flex", gap: "10px", alignItems: "center" }}>
+          
+          {/* ⏳ Loading spinner */}
+          {loading && <div className="spinner" />}
+
+          {/* 👤 User email */}
+          {isAuthenticated && !loading && (
+            <span className="user-email">
+              {user.email}
+            </span>
+          )}
+
+          {/* 🔐 Login / Logout */}
+          {!isAuthenticated && !loading && (
+            <NavLink to="/login" onClick={closeMenu}>
+              Login
+            </NavLink>
+          )}
+
+          {isAuthenticated && !loading && (
+            <button className="logout-btn" onClick={handleLogout}>
+              Logout
+            </button>
+          )}
+        </div>
       </nav>
     </header>
   );
