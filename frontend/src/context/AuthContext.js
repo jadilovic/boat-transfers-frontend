@@ -5,102 +5,110 @@ const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [profile, setProfile] = useState(null);
   const [role, setRole] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // fetch profile for a given user ID
+  const fetchProfile = async (userId) => {
+    try {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", userId)
+        .single();
+
+      if (error && error.code !== "PGRST116") {
+        console.error("Profile fetch error:", error.message);
+        return null;
+      }
+
+      return data || null;
+    } catch (err) {
+      console.error("Profile fetch failed:", err);
+      return null;
+    }
+  };
+
+  // manually update auth user (called after login)
+  const setAuthUser = (userData) => {
+    setUser({ ...userData });
+  };
+
+  // initialize user session
   useEffect(() => {
     let isMounted = true;
 
-    const fetchUserRole = async (userId) => {
-      try {
-        const { data, error } = await supabase
-          .from("profiles")
-          .select("role")
-          .eq("id", userId)
-          .single();
+    const init = async () => {
+      setLoading(true);
+      const { data } = await supabase.auth.getSession();
+      const session = data?.session;
 
-        if (error) {
-          console.error("Role fetch error:", error.message);
-          return null;
-        }
-
-        return data?.role || null;
-      } catch (err) {
-        console.error("Role fetch failed:", err);
-        return null;
-      }
-    };
-
-    const loadSession = async () => {
-      try {
-        const { data } = await supabase.auth.getSession();
-        const session = data?.session;
-
-        if (!isMounted) return;
-
-        if (session?.user) {
-          setUser(session.user);
-
-          // 🔥 DO NOT BLOCK loading on role
-          fetchUserRole(session.user.id).then((role) => {
-            if (isMounted) setRole(role);
-          });
-        } else {
-          setUser(null);
-          setRole(null);
-        }
-      } catch (err) {
-        console.error("Session load error:", err);
-        setUser(null);
-        setRole(null);
-      } finally {
-        // ✅ ALWAYS stop loading
-        if (isMounted) setLoading(false);
-      }
-    };
-
-    loadSession();
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
       if (!isMounted) return;
 
       if (session?.user) {
         setUser(session.user);
 
-        fetchUserRole(session.user.id).then((role) => {
-          if (isMounted) setRole(role);
-        });
+        const profileData = await fetchProfile(session.user.id);
+        if (isMounted) {
+          setProfile(profileData);
+          setRole(profileData?.role || "traveler");
+        }
       } else {
         setUser(null);
+        setProfile(null);
         setRole(null);
       }
 
-      // ✅ NEVER leave loading true
-      setLoading(false);
-    });
+      if (isMounted) setLoading(false);
+    };
+
+    init();
+
+    const { data: subscription } = supabase.auth.onAuthStateChange(
+      async (_event, session) => {
+        if (!isMounted) return;
+
+        if (session?.user) {
+          setUser(session.user);
+          const profileData = await fetchProfile(session.user.id);
+          setProfile(profileData);
+          setRole(profileData?.role || "traveler");
+        } else {
+          setUser(null);
+          setProfile(null);
+          setRole(null);
+        }
+
+        setLoading(false);
+      }
+    );
 
     return () => {
       isMounted = false;
-      subscription?.unsubscribe();
+      subscription?.subscription?.unsubscribe();
     };
   }, []);
 
-  // ✅ FIXED logout (NO loading state!)
   const logout = async () => {
-    const { error } = await supabase.auth.signOut();
-
-    if (error) {
-      console.error("Logout error:", error.message);
+    setLoading(true);
+    try {
+      await supabase.auth.signOut();
+    } catch (err) {
+      console.error("Logout failed:", err.message);
+    } finally {
+      setUser(null);
+      setProfile(null);
+      setRole(null);
+      setLoading(false);
+      window.location.href = "/";
     }
-
-    setUser(null);
-    setRole(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, role, loading, logout }}>
+    <AuthContext.Provider
+      value={{ user, profile, role, loading, logout, setAuthUser }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -10,15 +10,12 @@ export default function Navbar() {
   const { user, loading, logout } = useAuth();
   const isAuthenticated = !!user;
 
-  // Handle mobile resize
   useEffect(() => {
     const handleResize = () => {
       const mobile = window.innerWidth <= 768;
       setIsMobile(mobile);
-
       if (!mobile) setMenuOpen(false);
     };
-
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -28,14 +25,10 @@ export default function Navbar() {
     if (isMobile) setMenuOpen(false);
   };
 
-  // ✅ FIXED logout (no bugs, no stale state)
   const handleLogout = async () => {
     try {
       await logout();
       closeMenu();
-
-      // force full reset
-      window.location.href = "/";
     } catch (err) {
       console.error("Logout failed:", err.message);
     }
@@ -43,7 +36,6 @@ export default function Navbar() {
 
   return (
     <header className="navbar">
-      {/* LOGO */}
       <NavLink to="/" className="navbar-logo" onClick={closeMenu}>
         <svg
           width="36"
@@ -60,7 +52,6 @@ export default function Navbar() {
         <span>Island Boat Transfers</span>
       </NavLink>
 
-      {/* HAMBURGER */}
       {isMobile && (
         <button
           className={`hamburger ${menuOpen ? "open" : ""}`}
@@ -72,57 +63,33 @@ export default function Navbar() {
         </button>
       )}
 
-      {/* NAV LINKS */}
       <nav className={`nav-links ${menuOpen ? "open" : ""}`}>
-        <NavLink to="/" end onClick={closeMenu}>
-          Home
-        </NavLink>
+        <NavLink to="/" end onClick={closeMenu}>Home</NavLink>
+        <NavLink to="/calculator" onClick={closeMenu}>Calculator</NavLink>
+        <NavLink to="/dock-map" onClick={closeMenu}>Dock Map</NavLink>
 
-        <NavLink to="/calculator" onClick={closeMenu}>
-          Calculator
-        </NavLink>
-
-        <NavLink to="/dock-map" onClick={closeMenu}>
-          Dock Map
-        </NavLink>
-
-        {/* 🔒 Show protected links only if logged in */}
         {isAuthenticated && (
           <>
-            <NavLink to="/boat-calling" onClick={closeMenu}>
-              Boat Calling
-            </NavLink>
-
-            <NavLink to="/boat-booking" onClick={closeMenu}>
-              Boat Booking
-            </NavLink>
+            <NavLink to="/boat-calling" onClick={closeMenu}>Boat Calling</NavLink>
+            <NavLink to="/boat-booking" onClick={closeMenu}>Boat Booking</NavLink>
           </>
         )}
 
-        {/* RIGHT SIDE */}
         <div style={{ marginLeft: "auto", display: "flex", gap: "10px", alignItems: "center" }}>
-          
-          {/* ⏳ Loading spinner */}
           {loading && !user && <div className="spinner" />}
 
-          {/* 👤 User email */}
           {isAuthenticated && !loading && (
-            <span className="user-email">
+            <NavLink to="/profile" className="user-email" onClick={closeMenu}>
               {user.email}
-            </span>
-          )}
-
-          {/* 🔐 Login / Logout */}
-          {!isAuthenticated && !loading && (
-            <NavLink to="/login" onClick={closeMenu}>
-              Login
             </NavLink>
           )}
 
+          {!isAuthenticated && !loading && (
+            <NavLink to="/login" onClick={closeMenu}>Login</NavLink>
+          )}
+
           {isAuthenticated && !loading && (
-            <button className="logout-btn" onClick={handleLogout}>
-              Logout
-            </button>
+            <button className="logout-btn" onClick={handleLogout}>Logout</button>
           )}
         </div>
       </nav>

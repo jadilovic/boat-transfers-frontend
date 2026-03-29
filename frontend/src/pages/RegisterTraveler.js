@@ -8,7 +8,6 @@ export default function RegisterTraveler() {
   const [message, setMessage] = useState("");
 
   const handleSignup = async () => {
-
     if (!email || !password) {
       alert("All fields required");
       return;
@@ -17,7 +16,7 @@ export default function RegisterTraveler() {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-        options: {
+      options: {
         emailRedirectTo: "http://localhost:3001/auth/callback"
       }
     });
@@ -27,10 +26,17 @@ export default function RegisterTraveler() {
       return;
     }
 
-    // Detect existing account
-    if (data?.user?.identities?.length === 0) {
-      setMessage("An account with this email already exists. Please login.");
-      return;
+    const user = data?.user;
+
+    // ⚠️ Only insert if new user
+    if (user && user.identities?.length > 0) {
+      await supabase.from("profiles").insert([
+        {
+          id: user.id,
+          email: user.email,
+          role: "traveler"
+        }
+      ]);
     }
 
     setMessage("Check your email to verify your account.");

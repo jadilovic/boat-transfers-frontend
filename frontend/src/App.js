@@ -10,6 +10,7 @@ import DockMapPage from "./pages/DockMapPage";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import RegisterTraveler from "./pages/RegisterTraveler";
 import Login from "./pages/Login";
+import Profile from "./pages/Profile";
 import AuthCallback from "./pages/AuthCallback";
 
 // Routes
@@ -35,26 +36,7 @@ export default function App() {
       <Route path="/dock-map" element={<DockMapPage />} />
       <Route path="/auth/callback" element={<AuthCallback />} />
 
-      {/* 🔒 PROTECTED ROUTES */}
-      <Route
-        path="/boat-calling"
-        element={
-          <ProtectedRoute>
-            <BoatCalling />
-          </ProtectedRoute>
-        }
-      />
-
-      <Route
-        path="/boat-booking"
-        element={
-          <ProtectedRoute>
-            <BoatBooking />
-          </ProtectedRoute>
-        }
-      />
-
-      {/* 👤 GUEST ONLY */}
+      {/* GUEST ONLY */}
       <Route
         path="/login"
         element={
@@ -63,7 +45,6 @@ export default function App() {
           </GuestRoute>
         }
       />
-
       <Route
         path="/register-traveler"
         element={
@@ -73,7 +54,33 @@ export default function App() {
         }
       />
 
-      {/* 🛠 ADMIN ONLY */}
+      {/* PROTECTED ROUTES */}
+      <Route
+        path="/boat-calling"
+        element={
+          <ProtectedRoute>
+            <BoatCalling />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/boat-booking"
+        element={
+          <ProtectedRoute>
+            <BoatBooking />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* ADMIN ROUTE */}
       <Route
         path="/admin"
         element={

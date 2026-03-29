@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../utils/supabase";
+import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
   const navigate = useNavigate();
+  const { setAuthUser } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -31,27 +33,23 @@ export default function Login() {
       }
 
       const user = data?.user;
-
       if (!user) {
         alert("Login failed");
         return;
       }
 
-      // 🔥 Fetch role
+      // ✅ force React update instantly
+      setAuthUser(user);
+
+      // fetch profile for role
       const { data: profile } = await supabase
         .from("profiles")
         .select("role")
         .eq("id", user.id)
         .single();
 
-      // 🚀 Redirect
-      if (profile?.role === "admin") {
-        navigate("/admin");
-      } else if (profile?.role === "operator") {
-        navigate("/operator");
-      } else {
-        navigate("/");
-      }
+      if (profile?.role === "admin") navigate("/admin");
+      else navigate("/");
 
     } catch (err) {
       console.error(err);
@@ -74,7 +72,8 @@ export default function Login() {
           style={{ width: "100%", padding: 10 }}
         />
 
-        <br /><br />
+        <br />
+        <br />
 
         <input
           type="password"
@@ -84,13 +83,10 @@ export default function Login() {
           style={{ width: "100%", padding: 10 }}
         />
 
-        <br /><br />
+        <br />
+        <br />
 
-        <button
-          type="submit"
-          disabled={loading}
-          style={{ width: "100%", padding: 12 }}
-        >
+        <button type="submit" disabled={loading} style={{ width: "100%", padding: 12 }}>
           {loading ? "Logging in..." : "Login"}
         </button>
       </form>
