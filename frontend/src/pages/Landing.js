@@ -6,10 +6,11 @@ import { useAuth } from "../context/AuthContext";
 
 export default function Landing() {
   const navigate = useNavigate();
-
-  // ✅ MUST be inside component
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const isAuthenticated = !!user;
+
+  // Show loader until auth context finishes
+  if (loading) return <p style={{ padding: 40 }}>Loading...</p>;
 
   return (
     <Layout>
@@ -18,35 +19,22 @@ export default function Landing() {
         <div className="hero-content">
           <h1>Fast. Private. Direct Boat Transfers.</h1>
           <p>
-            Book a private transfer across the Zadar archipelago — quick,
-            comfortable and transparent pricing.
+            Book a private transfer across the Zadar archipelago — quick, comfortable and transparent pricing.
           </p>
 
           <div className="hero-actions">
-            <button
-              className="primary"
-              onClick={() => navigate("/calculator")}
-            >
+            <button className="primary" onClick={() => navigate("/calculator")}>
               Calculate Trip
             </button>
 
-            <button
-              className="secondary"
-              onClick={() => navigate("/dock-map")}
-            >
+            <button className="secondary" onClick={() => navigate("/dock-map")}>
               Choose on Map
             </button>
           </div>
         </div>
 
         <div className="hero-graphic">
-          <svg
-            className="boat-graphic"
-            width="260"
-            height="160"
-            viewBox="0 0 260 160"
-            xmlns="http://www.w3.org/2000/svg"
-          >
+          <svg className="boat-graphic" width="260" height="160" viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
             <rect x="40" y="80" width="160" height="20" rx="6" fill="#1a3c6e" />
             <polygon points="40,80 200,80 180,110 60,110" fill="#274b89" />
             <rect x="110" y="30" width="6" height="50" fill="#1a1a1a" />

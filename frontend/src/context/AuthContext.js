@@ -4,12 +4,12 @@ import { supabase } from "../utils/supabase";
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [profile, setProfile] = useState(null);
-  const [role, setRole] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);       // Supabase user
+  const [profile, setProfile] = useState(null); // Profile from DB
+  const [role, setRole] = useState(null);       // Role from profile
+  const [loading, setLoading] = useState(true); // Loading state
 
-  // fetch profile for a given user ID
+  // Fetch profile by user ID
   const fetchProfile = async (userId) => {
     try {
       const { data, error } = await supabase
@@ -22,7 +22,6 @@ export function AuthProvider({ children }) {
         console.error("Profile fetch error:", error.message);
         return null;
       }
-
       return data || null;
     } catch (err) {
       console.error("Profile fetch failed:", err);
@@ -30,41 +29,43 @@ export function AuthProvider({ children }) {
     }
   };
 
-  // manually update auth user (called after login)
-  const setAuthUser = (userData) => {
-    setUser({ ...userData });
-  };
-
-  // initialize user session
+  // Initialize session on mount
   useEffect(() => {
     let isMounted = true;
 
-    const init = async () => {
+    const initSession = async () => {
       setLoading(true);
-      const { data } = await supabase.auth.getSession();
-      const session = data?.session;
+      try {
+        const { data } = await supabase.auth.getSession();
+        const session = data?.session;
 
-      if (!isMounted) return;
-
-      if (session?.user) {
-        setUser(session.user);
-
-        const profileData = await fetchProfile(session.user.id);
-        if (isMounted) {
-          setProfile(profileData);
-          setRole(profileData?.role || "traveler");
+        if (session?.user && isMounted) {
+          setUser(session.user);
+          const profileData = await fetchProfile(session.user.id);
+          if (isMounted) {
+            setProfile(profileData);
+            setRole(profileData?.role || "traveler");
+          }
+        } else if (isMounted) {
+          setUser(null);
+          setProfile(null);
+          setRole(null);
         }
-      } else {
-        setUser(null);
-        setProfile(null);
-        setRole(null);
+      } catch (err) {
+        console.error("Error initializing session:", err);
+        if (isMounted) {
+          setUser(null);
+          setProfile(null);
+          setRole(null);
+        }
+      } finally {
+        if (isMounted) setLoading(false);
       }
-
-      if (isMounted) setLoading(false);
     };
 
-    init();
+    initSession();
 
+    // Listen to auth state changes
     const { data: subscription } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
         if (!isMounted) return;
@@ -79,7 +80,6 @@ export function AuthProvider({ children }) {
           setProfile(null);
           setRole(null);
         }
-
         setLoading(false);
       }
     );
@@ -101,14 +101,11 @@ export function AuthProvider({ children }) {
       setProfile(null);
       setRole(null);
       setLoading(false);
-      window.location.href = "/";
     }
   };
 
   return (
-    <AuthContext.Provider
-      value={{ user, profile, role, loading, logout, setAuthUser }}
-    >
+    <AuthContext.Provider value={{ user, profile, role, loading, logout }}>
       {children}
     </AuthContext.Provider>
   );
