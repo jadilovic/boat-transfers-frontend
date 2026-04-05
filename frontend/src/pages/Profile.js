@@ -11,21 +11,42 @@ export default function Profile() {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
 
-  // Populate form when profile is loaded
+  // Fetch and populate the form when profile is loaded
   useEffect(() => {
     if (profile) {
       setName(profile.name || "");
       setCity(profile.city || "");
       setState(profile.state || "");
+    } else {
+      // Fetch the profile from Supabase if it's not available
+      const fetchProfile = async () => {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", user.id)
+          .single();
+
+        if (error) {
+          console.error("Error fetching profile:", error.message);
+        } else {
+          setName(data.name || "");
+          setCity(data.city || "");
+          setState(data.state || "");
+        }
+      };
+
+      if (user) {
+        fetchProfile();
+      }
     }
-  }, [profile]);
+  }, [profile, user]);
 
   // Handle profile save
   const handleSave = async () => {
     if (!user) return;
 
     setSaving(true);
-    setMessage("");
+    setMessage(""); // Clear any previous message
 
     try {
       const updates = {
@@ -33,9 +54,9 @@ export default function Profile() {
         name,
         city,
         state,
-        updated_at: new Date().toISOString(),
       };
 
+      // Perform the upsert to update the profile in Supabase
       const { error } = await supabase
         .from("profiles")
         .upsert(updates, { returning: "representation" })
@@ -48,10 +69,11 @@ export default function Profile() {
       console.error("Profile update failed:", err.message);
       setMessage("Error updating profile. Try again.");
     } finally {
-      setSaving(false);
+      setSaving(false); // Reset saving state
     }
   };
 
+  // Handle loading and unauthorized access
   if (loading) return <Layout><p>Loading profile...</p></Layout>;
   if (!user) return <Layout><p>You must be logged in to view this page.</p></Layout>;
 

@@ -9,6 +9,11 @@ export function AuthProvider({ children }) {
   const [role, setRole] = useState(null);       // Role from profile
   const [loading, setLoading] = useState(true); // Loading state
 
+  // Function to set the authenticated user (setAuthUser)
+  const setAuthUser = (user) => {
+    setUser(user);
+  };
+
   // Fetch profile by user ID
   const fetchProfile = async (userId) => {
     try {
@@ -36,25 +41,32 @@ export function AuthProvider({ children }) {
     const initSession = async () => {
       setLoading(true);
       try {
-        const { data } = await supabase.auth.getSession();
-        const session = data?.session;
+        // Check if session exists in localStorage
+        const storedSession = localStorage.getItem('supabase.auth.token');
+        if (storedSession) {
+          const { data } = JSON.parse(storedSession);
+          const session = data?.session;
 
-        if (session?.user && isMounted) {
-          setUser(session.user);
-          const profileData = await fetchProfile(session.user.id);
-          if (isMounted) {
-            setProfile(profileData);
-            setRole(profileData?.role || "traveler");
+          if (session?.user && isMounted) {
+            setAuthUser(session.user);  // Set the user using setAuthUser
+            const profileData = await fetchProfile(session.user.id);
+            if (isMounted) {
+              setProfile(profileData);
+              setRole(profileData?.role || "traveler");
+            }
+          } else if (isMounted) {
+            setAuthUser(null);  // Clear the user if no session
+            setProfile(null);
+            setRole(null);
           }
-        } else if (isMounted) {
-          setUser(null);
-          setProfile(null);
-          setRole(null);
+        } else {
+          // If no session, mark loading as false directly
+          setLoading(false);
         }
       } catch (err) {
         console.error("Error initializing session:", err);
         if (isMounted) {
-          setUser(null);
+          setAuthUser(null);  // Clear the user if error occurs
           setProfile(null);
           setRole(null);
         }
@@ -71,12 +83,12 @@ export function AuthProvider({ children }) {
         if (!isMounted) return;
 
         if (session?.user) {
-          setUser(session.user);
+          setAuthUser(session.user);  // Set the user on auth state change
           const profileData = await fetchProfile(session.user.id);
           setProfile(profileData);
           setRole(profileData?.role || "traveler");
         } else {
-          setUser(null);
+          setAuthUser(null);  // Clear the user on logout
           setProfile(null);
           setRole(null);
         }
@@ -88,22 +100,30 @@ export function AuthProvider({ children }) {
       isMounted = false;
       subscription?.subscription?.unsubscribe();
     };
+
   }, []);
 
+  // Inside AuthContext.js
+
   const logout = async () => {
-    setLoading(true);
+    setLoading(true); // Set loading to true while logging out
     try {
-      await supabase.auth.signOut();
+      await supabase.auth.signOut(); // Sign out from supabase
+
+      // Remove user data and token from localStorage
+      localStorage.removeItem('supabase.auth.token'); 
+
+      // Clear user state and profile
+      setAuthUser(null);  // Make sure to clear the user after logout
+      setProfile(null);
+      setRole(null);
     } catch (err) {
       console.error("Logout failed:", err.message);
     } finally {
-      setUser(null);
-      setProfile(null);
-      setRole(null);
-      setLoading(false);
+      setLoading(false); // Set loading to false after the logout process
     }
   };
-
+  
   return (
     <AuthContext.Provider value={{ user, profile, role, loading, logout }}>
       {children}

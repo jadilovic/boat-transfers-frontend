@@ -1,8 +1,8 @@
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import Layout from "../components/Layout";
 import TransferChoice from "../components/TransferChoice";
 import "./Landing.css";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
 
 export default function Landing() {
   const navigate = useNavigate();
@@ -10,7 +10,7 @@ export default function Landing() {
   const isAuthenticated = !!user;
 
   // Show loader until auth context finishes
-  if (loading) return <p style={{ padding: 40 }}>Loading...</p>;
+  if (loading) return <Layout><p>Loading...</p></Layout>;
 
   return (
     <Layout>

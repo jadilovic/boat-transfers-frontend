@@ -7,7 +7,7 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
-  const { user, loading, logout } = useAuth();
+  const { user, loading, logout } = useAuth();  // make sure logout is correctly passed from context
   const isAuthenticated = !!user;
 
   // Handle mobile resize
@@ -29,12 +29,15 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     try {
-      await logout();
-      closeMenu();
+      await logout();  // this will log the user out
+      closeMenu(); // Close the menu on logout
     } catch (err) {
       console.error("Logout failed:", err.message);
     }
   };
+
+  // Show a loading spinner while auth is loading
+  if (loading) return <div className="spinner" />;
 
   return (
     <header className="navbar">

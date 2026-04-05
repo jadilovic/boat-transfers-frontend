@@ -5,7 +5,7 @@ import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
   const navigate = useNavigate();
-  const { setAuthUser } = useAuth();
+  const { setAuthUser } = useAuth(); // Now using setAuthUser from context
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -38,10 +38,13 @@ export default function Login() {
         return;
       }
 
-      // ✅ force React update instantly
+      // ✅ Now using setAuthUser correctly
       setAuthUser(user);
 
-      // fetch profile for role
+      // Store the session in localStorage
+      localStorage.setItem('supabase.auth.token', JSON.stringify(data));
+
+      // Fetch profile for role
       const { data: profile } = await supabase
         .from("profiles")
         .select("role")
